@@ -1,0 +1,1 @@
+ALTER TABLE public.themes ADD COLUMN intro_text TEXT NOT NULL DEFAULT '';

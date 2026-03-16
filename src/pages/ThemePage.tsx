@@ -94,6 +94,15 @@ const ThemePage = () => {
       </div>
 
       <main className="max-w-5xl mx-auto px-6 py-10">
+        {/* Intro text */}
+        {theme.intro_text && (
+          <section className="mb-10">
+            <div className="bg-card rounded-2xl card-shadow border border-border/50 p-8">
+              <p className="text-foreground leading-relaxed whitespace-pre-line">{theme.intro_text}</p>
+            </div>
+          </section>
+        )}
+
         {/* Videos */}
         {videos && videos.length > 0 && (
           <section className="mb-12">

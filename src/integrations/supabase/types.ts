@@ -141,6 +141,7 @@ export type Database = {
           description: string
           icon: string
           id: string
+          intro_text: string
           sort_order: number
           title: string
           updated_at: string
@@ -150,6 +151,7 @@ export type Database = {
           description: string
           icon?: string
           id?: string
+          intro_text?: string
           sort_order?: number
           title: string
           updated_at?: string
@@ -159,6 +161,7 @@ export type Database = {
           description?: string
           icon?: string
           id?: string
+          intro_text?: string
           sort_order?: number
           title?: string
           updated_at?: string

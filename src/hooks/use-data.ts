@@ -114,7 +114,7 @@ export function useCreateTheme() {
 export function useUpdateTheme() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...params }: { id: string; title?: string; description?: string; icon?: string }) => {
+    mutationFn: async ({ id, ...params }: { id: string; title?: string; description?: string; icon?: string; intro_text?: string }) => {
       const { error } = await supabase.from("themes").update(params).eq("id", id);
       if (error) throw error;
     },

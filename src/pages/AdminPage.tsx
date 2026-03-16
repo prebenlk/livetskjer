@@ -205,7 +205,7 @@ function ThemeDetail({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingTheme, setIsEditingTheme] = useState(false);
-  const [editForm, setEditForm] = useState({ title: "", description: "", icon: "" });
+  const [editForm, setEditForm] = useState({ title: "", description: "", icon: "", intro_text: "" });
   const [showAddVideo, setShowAddVideo] = useState(false);
   const [newVideo, setNewVideo] = useState({ title: "", description: "", url: "", duration: "" });
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
@@ -234,7 +234,7 @@ function ThemeDetail({
   ];
 
   const startEditTheme = () => {
-    setEditForm({ title: theme.title, description: theme.description, icon: theme.icon });
+    setEditForm({ title: theme.title, description: theme.description, icon: theme.icon, intro_text: theme.intro_text || "" });
     setIsEditingTheme(true);
   };
 
@@ -383,9 +383,18 @@ function ThemeDetail({
                     <textarea
                       value={editForm.description}
                       onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                      className={`${inputClass} min-h-[100px]`}
-                      placeholder="Beskrivelse"
+                      className={`${inputClass} min-h-[80px]`}
+                      placeholder="Kort beskrivelse (vises på kortet)"
                     />
+                    <div>
+                      <label className="text-sm font-medium text-foreground block mb-1.5">Introduksjonstekst</label>
+                      <textarea
+                        value={editForm.intro_text}
+                        onChange={(e) => setEditForm({ ...editForm, intro_text: e.target.value })}
+                        className={`${inputClass} min-h-[150px]`}
+                        placeholder="Skriv en lengre introduksjonstekst som vises på temasiden (f.eks. hva er depresjon, hvordan påvirker det oss...)"
+                      />
+                    </div>
                     <div className="flex gap-2">
                       <button onClick={saveTheme} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">
                         <Check className="w-4 h-4" /> Lagre
