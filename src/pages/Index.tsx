@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { useThemes, useSiteSettings } from "@/hooks/use-data";
 import { ThemeCard } from "@/components/ThemeCard";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
-import { motion, AnimatePresence } from "framer-motion";
-import { Eye, Activity, BookOpen, Users, Heart, ChevronDown, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
 import treeOfLife from "@/assets/tree-of-life.png";
 
 const FIVE_TIPS = [
