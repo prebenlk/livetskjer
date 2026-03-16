@@ -30,6 +30,8 @@ const AdminPage = () => {
   const createVideo = useCreateVideo();
   const updateVideo = useUpdateVideo();
   const deleteVideo = useDeleteVideo();
+  const { data: siteSettings } = useSiteSettings();
+  const updateSetting = useUpdateSiteSetting();
 
   // Theme form state
   const [showAddTheme, setShowAddTheme] = useState(false);
