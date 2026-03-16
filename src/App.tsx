@@ -11,6 +11,7 @@ import VideoPage from "./pages/VideoPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import ToolsPage from "./pages/ToolsPage.tsx";
+import FiveGrepPage from "./pages/FiveGrepPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/verktoy" element={<ToolsPage />} />
             <Route path="/verktoy/:themeId" element={<ToolsPage />} />
+            <Route path="/fem-grep" element={<FiveGrepPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
