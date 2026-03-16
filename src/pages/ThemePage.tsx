@@ -38,7 +38,10 @@ const ThemePage = () => {
   const { data: videos, isLoading: videosLoading } = useVideos(themeId);
   const { data: resources, isLoading: resourcesLoading } = useThemeResources(themeId);
 
-  if (themeLoading || videosLoading || resourcesLoading) {
+  useEffect(() => {
+    if (themeId) markThemeVisited(themeId);
+  }, [themeId]);
+
     return (
       <div className="min-h-screen bg-background">
         <Header />
