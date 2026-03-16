@@ -113,6 +113,20 @@ export function useCreateVideo() {
   });
 }
 
+export function useUpdateVideo() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...params }: { id: string; title?: string; description?: string; url?: string; theme_id?: string; duration?: string }) => {
+      const { error } = await supabase.from("videos").update(params).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["videos"] });
+      qc.invalidateQueries({ queryKey: ["themes"] });
+    },
+  });
+}
+
 export function useDeleteVideo() {
   const qc = useQueryClient();
   return useMutation({
@@ -120,6 +134,9 @@ export function useDeleteVideo() {
       const { error } = await supabase.from("videos").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["videos"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["videos"] });
+      qc.invalidateQueries({ queryKey: ["themes"] });
+    },
   });
 }
