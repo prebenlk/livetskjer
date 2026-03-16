@@ -3,6 +3,7 @@ import { ThemeCard } from "@/components/ThemeCard";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
 import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 const Index = () => {
   const { data: themes, isLoading } = useThemes();
@@ -16,27 +17,40 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
 
-      {/* Hero section with gradient overlay */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--theme-sleep)/0.15)] via-transparent to-[hsl(var(--theme-anxiety)/0.1)]" />
-        <div className="absolute top-20 -left-32 w-96 h-96 bg-[hsl(var(--primary)/0.08)] rounded-full blur-3xl" />
-        <div className="absolute bottom-0 -right-32 w-80 h-80 bg-[hsl(var(--theme-stress)/0.08)] rounded-full blur-3xl" />
+      {/* Hero section */}
+      <div className="relative overflow-hidden noise">
+        {/* Ambient gradient blobs */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[hsl(var(--primary)/0.06)] rounded-full blur-[120px]" />
+          <div className="absolute -bottom-32 right-1/4 w-[500px] h-[500px] bg-[hsl(var(--theme-sleep)/0.06)] rounded-full blur-[100px]" />
+          <div className="absolute top-1/2 -left-32 w-[400px] h-[400px] bg-[hsl(var(--theme-anxiety)/0.04)] rounded-full blur-[80px]" />
+        </div>
 
-        <main className="relative max-w-6xl mx-auto px-6 py-20 md:py-28">
+        <main className="relative max-w-6xl mx-auto px-6 pt-24 pb-20 md:pt-32 md:pb-28">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-16 text-center mx-auto max-w-3xl"
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-20 text-center mx-auto max-w-3xl"
           >
-            <p className="text-lg md:text-xl font-bold tracking-wide text-primary uppercase mb-4">
-              Livet skjer
-            </p>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-8 leading-[1.1]">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[hsl(var(--primary)/0.1)] border border-[hsl(var(--primary)/0.2)] mb-8"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <span className="text-sm font-semibold text-primary tracking-wide uppercase">
+                Livet skjer
+              </span>
+            </motion.div>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground mb-8 leading-[1.08]">
               {heroTitle.includes("bedre hverdag") ? (
                 <>
                   {heroTitle.split("bedre hverdag")[0]}
-                  <span className="block mt-2 bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(var(--theme-sleep))] to-[hsl(var(--theme-anxiety))] bg-clip-text text-transparent">
+                  <span className="block mt-2 text-gradient bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(168,65%,60%)] to-[hsl(var(--theme-sleep))]">
                     bedre hverdag
                   </span>
                 </>
@@ -44,20 +58,26 @@ const Index = () => {
                 heroTitle
               )}
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-[55ch] mx-auto leading-loose">
+
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-base md:text-lg text-muted-foreground max-w-[52ch] mx-auto leading-relaxed"
+            >
               {heroSubtitle}
-            </p>
+            </motion.p>
           </motion.div>
 
-          {/* Intro text section */}
+          {/* Intro text */}
           {introText && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.5 }}
-              className="mb-14 max-w-3xl mx-auto"
+              transition={{ delay: 0.25, duration: 0.5 }}
+              className="mb-16 max-w-3xl mx-auto"
             >
-              <div className="bg-card/60 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
+              <div className="glass rounded-2xl border border-border/40 p-8 md:p-10">
                 <p className="text-muted-foreground leading-relaxed text-base md:text-lg text-center">
                   {introText}
                 </p>
@@ -65,25 +85,47 @@ const Index = () => {
             </motion.div>
           )}
 
+          {/* Section divider */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="flex items-center gap-4 mb-10 max-w-3xl mx-auto"
+          >
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border/60" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Utforsk temaer
+            </span>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border/60" />
+          </motion.div>
+
+          {/* Theme cards grid */}
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="bg-card rounded-2xl border border-border/50 p-8 animate-pulse h-64" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-card/50 rounded-2xl border border-border/30 p-8 animate-pulse h-64"
+                />
               ))}
             </div>
           ) : (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+              transition={{ delay: 0.35, duration: 0.5 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {themes?.map((theme, i) => (
                 <motion.div
                   key={theme.id}
-                  initial={{ opacity: 0, y: 24 }}
+                  initial={{ opacity: 0, y: 28 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.08 * i + 0.3, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{
+                    delay: 0.06 * i + 0.4,
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                 >
                   <ThemeCard theme={theme} index={i} />
                 </motion.div>
@@ -92,6 +134,18 @@ const Index = () => {
           )}
         </main>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-border/20 py-10">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Livetskjer.no — Anonymt og gratis
+          </p>
+          <p className="text-xs text-muted-foreground/60">
+            Et verktøy for psykisk helse og mestring
+          </p>
+        </div>
+      </footer>
 
       <HelpButton />
     </div>
