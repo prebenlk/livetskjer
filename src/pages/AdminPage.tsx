@@ -21,7 +21,7 @@ const ICON_OPTIONS = Object.keys(iconMap);
 
 const AdminPage = () => {
   const { user, loading, signOut } = useAuth();
-  const [tab, setTab] = useState<Tab>("themes");
+  const [tab, setTab] = useState<Tab>("stats");
   const { data: themes } = useThemes();
   const { data: videos } = useVideos();
 
