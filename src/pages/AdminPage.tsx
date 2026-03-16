@@ -6,13 +6,14 @@ import {
   useThemes, useVideos,
   useCreateTheme, useUpdateTheme, useDeleteTheme,
   useCreateVideo, useUpdateVideo, useDeleteVideo,
+  useSiteSettings, useUpdateSiteSetting,
 } from "@/hooks/use-data";
 import { getIcon, iconMap } from "@/lib/icons";
-import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check } from "lucide-react";
+import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
-type Tab = "themes" | "videos";
+type Tab = "themes" | "videos" | "settings";
 
 const ADMIN_EMAIL = "preben-karlsen@hotmail.com";
 const ICON_OPTIONS = Object.keys(iconMap);
@@ -29,6 +30,8 @@ const AdminPage = () => {
   const createVideo = useCreateVideo();
   const updateVideo = useUpdateVideo();
   const deleteVideo = useDeleteVideo();
+  const { data: siteSettings } = useSiteSettings();
+  const updateSetting = useUpdateSiteSetting();
 
   // Theme form state
   const [showAddTheme, setShowAddTheme] = useState(false);
@@ -41,6 +44,12 @@ const AdminPage = () => {
   const [newVideo, setNewVideo] = useState({ title: "", description: "", url: "", theme_id: "", duration: "" });
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
   const [editVideo, setEditVideo] = useState({ title: "", description: "", url: "", theme_id: "", duration: "" });
+
+  // Settings form state
+  const [settingsForm, setSettingsForm] = useState<Record<string, string> | null>(null);
+
+  // Sync settings form when data loads
+  const currentSettings = settingsForm ?? siteSettings ?? {};
 
   if (loading) {
     return (
@@ -67,6 +76,7 @@ const AdminPage = () => {
   const tabs: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
     { id: "themes", label: "Temaer", icon: LayoutGrid },
     { id: "videos", label: "Videoer", icon: VideoIcon },
+    { id: "settings", label: "Innstillinger", icon: Settings },
   ];
 
   // --- Theme handlers ---
@@ -424,6 +434,64 @@ const AdminPage = () => {
                   })}
                 </AnimatePresence>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========== SETTINGS TAB ========== */}
+        {tab === "settings" && (
+          <div className="bg-card rounded-2xl card-shadow border border-border/50 overflow-hidden">
+            <div className="p-6 border-b border-border">
+              <h2 className="font-medium text-foreground">Nettside-innstillinger</h2>
+              <p className="text-sm text-muted-foreground mt-1">Rediger teksten som vises på forsiden</p>
+            </div>
+            <div className="p-6 space-y-6">
+              <div>
+                <label className="text-sm font-medium text-foreground block mb-1.5">Hovedtittel</label>
+                <input
+                  value={currentSettings.hero_title ?? ""}
+                  onChange={(e) => setSettingsForm({ ...currentSettings, hero_title: e.target.value })}
+                  className={inputClass + " w-full"}
+                  placeholder="Verktøy for en bedre hverdag"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground block mb-1.5">Undertekst</label>
+                <textarea
+                  value={currentSettings.hero_subtitle ?? ""}
+                  onChange={(e) => setSettingsForm({ ...currentSettings, hero_subtitle: e.target.value })}
+                  className={inputClass + " w-full min-h-[80px]"}
+                  placeholder="Kort beskrivelse under tittelen"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground block mb-1.5">Introduksjonstekst</label>
+                <textarea
+                  value={currentSettings.intro_text ?? ""}
+                  onChange={(e) => setSettingsForm({ ...currentSettings, intro_text: e.target.value })}
+                  className={inputClass + " w-full min-h-[120px]"}
+                  placeholder="Beskriv hva Livetskjer.no er..."
+                />
+              </div>
+              <button
+                onClick={async () => {
+                  try {
+                    const keys = ["hero_title", "hero_subtitle", "intro_text"];
+                    for (const key of keys) {
+                      if (currentSettings[key] !== siteSettings?.[key]) {
+                        await updateSetting.mutateAsync({ key, value: currentSettings[key] ?? "" });
+                      }
+                    }
+                    toast.success("Innstillinger lagret!");
+                    setSettingsForm(null);
+                  } catch (e: any) {
+                    toast.error(e.message);
+                  }
+                }}
+                className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                Lagre endringer
+              </button>
             </div>
           </div>
         )}

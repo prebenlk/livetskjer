@@ -1,4 +1,4 @@
-import { useThemes } from "@/hooks/use-data";
+import { useThemes, useSiteSettings } from "@/hooks/use-data";
 import { ThemeCard } from "@/components/ThemeCard";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
@@ -6,6 +6,11 @@ import { motion } from "framer-motion";
 
 const Index = () => {
   const { data: themes, isLoading } = useThemes();
+  const { data: settings } = useSiteSettings();
+
+  const heroTitle = settings?.hero_title ?? "Verktøy for en bedre hverdag";
+  const heroSubtitle = settings?.hero_subtitle ?? "";
+  const introText = settings?.intro_text ?? "";
 
   return (
     <div className="min-h-screen bg-background">
@@ -29,15 +34,37 @@ const Index = () => {
               Helt anonymt
             </div>
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-5 leading-[1.1]">
-              Verktøy for en
-              <span className="block bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(var(--theme-sleep))] to-[hsl(var(--theme-anxiety))] bg-clip-text text-transparent">
-                bedre hverdag
-              </span>
+              {heroTitle.includes("bedre hverdag") ? (
+                <>
+                  {heroTitle.split("bedre hverdag")[0]}
+                  <span className="block bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(var(--theme-sleep))] to-[hsl(var(--theme-anxiety))] bg-clip-text text-transparent">
+                    bedre hverdag
+                  </span>
+                </>
+              ) : (
+                heroTitle
+              )}
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-[55ch] leading-relaxed">
-              Velg et tema som passer din situasjon. Kunnskap og øvelser utviklet av fagpersoner – helt tilgjengelig for alle.
+              {heroSubtitle}
             </p>
           </motion.div>
+
+          {/* Intro text section */}
+          {introText && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.5 }}
+              className="mb-14 max-w-3xl"
+            >
+              <div className="bg-card/60 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
+                <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                  {introText}
+                </p>
+              </div>
+            </motion.div>
+          )}
 
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
