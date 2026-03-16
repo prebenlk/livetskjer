@@ -45,6 +45,12 @@ const AdminPage = () => {
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
   const [editVideo, setEditVideo] = useState({ title: "", description: "", url: "", theme_id: "", duration: "" });
 
+  // Settings form state
+  const [settingsForm, setSettingsForm] = useState<Record<string, string> | null>(null);
+
+  // Sync settings form when data loads
+  const currentSettings = settingsForm ?? siteSettings ?? {};
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
