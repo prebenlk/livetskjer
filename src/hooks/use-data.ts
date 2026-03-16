@@ -214,3 +214,81 @@ export function usePageViews() {
     },
   });
 }
+
+// ========== THEME RESOURCES ==========
+
+export function useThemeResources(themeId?: string) {
+  return useQuery({
+    queryKey: ["theme_resources", themeId],
+    enabled: !!themeId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("theme_resources" as any)
+        .select("*")
+        .eq("theme_id", themeId!)
+        .order("sort_order");
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+}
+
+export function useAllThemeResources() {
+  return useQuery({
+    queryKey: ["theme_resources"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("theme_resources" as any)
+        .select("*")
+        .order("sort_order");
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+}
+
+export function useCreateThemeResource() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (params: { theme_id: string; title: string; description: string; type: string; image_url?: string; link?: string }) => {
+      const { error } = await supabase.from("theme_resources" as any).insert(params as any);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["theme_resources"] }),
+  });
+}
+
+export function useUpdateThemeResource() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...params }: { id: string; title?: string; description?: string; type?: string; image_url?: string; link?: string }) => {
+      const { error } = await supabase.from("theme_resources" as any).update(params as any).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["theme_resources"] }),
+  });
+}
+
+export function useDeleteThemeResource() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("theme_resources" as any).delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["theme_resources"] }),
+  });
+}
+
+export function useUploadResourceImage() {
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const ext = file.name.split('.').pop();
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("resource-images").upload(path, file);
+      if (error) throw error;
+      const { data } = supabase.storage.from("resource-images").getPublicUrl(path);
+      return data.publicUrl;
+    },
+  });
+}
