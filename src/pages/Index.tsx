@@ -55,7 +55,7 @@ const Index = () => {
               className="mb-14 max-w-3xl mx-auto"
             >
               <div className="bg-card/60 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
-                <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                <p className="text-muted-foreground leading-relaxed text-base md:text-lg text-center">
                   {introText}
                 </p>
               </div>
