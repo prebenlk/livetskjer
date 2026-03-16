@@ -7,9 +7,9 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 
 const feedbackOptions = [
-  { icon: Frown, label: "Ikke nyttig", value: "bad" },
-  { icon: Meh, label: "Ok", value: "ok" },
-  { icon: Smile, label: "Veldig nyttig", value: "good" },
+  { icon: Frown, label: "Ikke nyttig", value: "bad", color: "hsl(0, 70%, 60%)" },
+  { icon: Meh, label: "Ok", value: "ok", color: "hsl(40, 70%, 55%)" },
+  { icon: Smile, label: "Veldig nyttig", value: "good", color: "hsl(168, 50%, 50%)" },
 ] as const;
 
 const VideoPage = () => {
@@ -60,10 +60,10 @@ const VideoPage = () => {
         </Link>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-2xl font-semibold text-foreground mb-2">{video.title}</h1>
-          <p className="text-muted-foreground mb-8">{video.description}</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{video.title}</h1>
+          <p className="text-muted-foreground mb-8 max-w-2xl">{video.description}</p>
 
-          <div className="aspect-video rounded-2xl overflow-hidden bg-foreground/5 mb-10">
+          <div className="aspect-video rounded-2xl overflow-hidden bg-card border border-border/50 card-shadow mb-10">
             <iframe
               src={video.url}
               title={video.title}
@@ -74,20 +74,20 @@ const VideoPage = () => {
           </div>
 
           <div className="bg-card rounded-2xl card-shadow border border-border/50 p-8">
-            <h3 className="font-medium text-foreground mb-4">
+            <h3 className="font-semibold text-foreground mb-5">
               {submitted ? "Takk for tilbakemeldingen! 🙏" : "Var denne videoen nyttig?"}
             </h3>
 
             {!submitted ? (
               <div className="flex gap-4">
-                {feedbackOptions.map(({ icon: Icon, label, value }) => (
+                {feedbackOptions.map(({ icon: Icon, label, value, color }) => (
                   <button
                     key={value}
                     onClick={() => handleFeedback(value)}
-                    className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border transition-all hover:border-primary/30 hover:bg-primary/5"
+                    className="flex flex-col items-center gap-2.5 p-5 rounded-xl border border-border/50 transition-all hover:border-border hover:card-shadow-hover bg-background"
                   >
-                    <Icon className="w-6 h-6 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">{label}</span>
+                    <Icon className="w-7 h-7" style={{ color }} />
+                    <span className="text-xs text-muted-foreground font-medium">{label}</span>
                   </button>
                 ))}
               </div>
