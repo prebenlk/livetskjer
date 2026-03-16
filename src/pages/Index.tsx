@@ -147,7 +147,7 @@ const Index = () => {
       <footer className="border-t border-border/20 py-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Livetskjer.no — Anonymt og gratis
+            © {new Date().getFullYear()} Nårlivetskjer.no — Anonymt, laget av fagfolk PLK
           </p>
           <p className="text-xs text-muted-foreground/60">
             Et verktøy for psykisk helse og mestring
