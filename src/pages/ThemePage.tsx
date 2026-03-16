@@ -1,10 +1,12 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useTheme, useVideos, useThemeResources } from "@/hooks/use-data";
 import { getIcon } from "@/lib/icons";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
 import { ArrowLeft, Play, Clock, BookOpen, ExternalLink, Image, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { markThemeVisited } from "@/pages/ToolsPage";
 
 const THEME_COLORS = [
   { accent: "hsl(230, 70%, 65%)", gradient: "from-[hsl(230,70%,65%)] to-[hsl(255,55%,52%)]" },

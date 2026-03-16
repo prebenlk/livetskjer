@@ -10,6 +10,7 @@ import ThemePage from "./pages/ThemePage.tsx";
 import VideoPage from "./pages/VideoPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import ToolsPage from "./pages/ToolsPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
