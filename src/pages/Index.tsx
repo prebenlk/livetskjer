@@ -33,17 +33,22 @@ const Index = () => {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="mb-20 text-center mx-auto max-w-3xl"
           >
-            {/* Badge */}
+            {/* Brand title */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[hsl(var(--primary)/0.1)] border border-[hsl(var(--primary)/0.2)] mb-8"
+              transition={{ delay: 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-10 flex flex-col items-center"
             >
-              <Sparkles className="w-3.5 h-3.5 text-primary" />
-              <span className="text-sm font-semibold text-primary tracking-wide uppercase">
-                Livet skjer
-              </span>
+              <div className="flex flex-col items-center leading-none">
+                <span className="text-2xl md:text-3xl font-medium tracking-[0.2em] uppercase text-muted-foreground/70">
+                  Livet
+                </span>
+                <span className="text-5xl md:text-7xl font-extrabold tracking-tight uppercase text-gradient bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(168,65%,60%)] to-[hsl(var(--theme-sleep))]">
+                  Skjer
+                </span>
+              </div>
+              <div className="mt-3 h-px w-16 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground mb-8 leading-[1.08]">
