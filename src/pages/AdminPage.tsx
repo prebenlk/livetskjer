@@ -825,11 +825,16 @@ const AdminPage = () => {
                 theme={theme}
                 videos={videos ?? []}
                 themes={themes}
+                resources={allResources ?? []}
                 onUpdateTheme={updateTheme}
                 onDeleteTheme={deleteTheme}
                 onCreateVideo={createVideo}
                 onUpdateVideo={updateVideo}
                 onDeleteVideo={deleteVideo}
+                onCreateResource={createResource}
+                onUpdateResource={updateResource}
+                onDeleteResource={deleteResource}
+                onUploadImage={uploadImage}
               />
             ))}
           </div>
