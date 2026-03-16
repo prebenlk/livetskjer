@@ -672,6 +672,7 @@ const AdminPage = () => {
   const [tab, setTab] = useState<Tab>("stats");
   const { data: themes } = useThemes();
   const { data: videos } = useVideos();
+  const { data: allResources } = useAllThemeResources();
 
   const createTheme = useCreateTheme();
   const updateTheme = useUpdateTheme();
@@ -679,6 +680,10 @@ const AdminPage = () => {
   const createVideo = useCreateVideo();
   const updateVideo = useUpdateVideo();
   const deleteVideo = useDeleteVideo();
+  const createResource = useCreateThemeResource();
+  const updateResource = useUpdateThemeResource();
+  const deleteResource = useDeleteThemeResource();
+  const uploadImage = useUploadResourceImage();
   const { data: siteSettings } = useSiteSettings();
   const updateSetting = useUpdateSiteSetting();
   const { data: feedback } = useFeedback();
