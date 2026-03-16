@@ -6,9 +6,10 @@ import {
   useThemes, useVideos,
   useCreateTheme, useUpdateTheme, useDeleteTheme,
   useCreateVideo, useUpdateVideo, useDeleteVideo,
+  useSiteSettings, useUpdateSiteSetting,
 } from "@/hooks/use-data";
 import { getIcon, iconMap } from "@/lib/icons";
-import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check } from "lucide-react";
+import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
