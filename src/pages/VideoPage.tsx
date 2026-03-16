@@ -97,7 +97,7 @@ const VideoPage = () => {
 
           <div className="aspect-video rounded-2xl overflow-hidden bg-card border border-border/50 card-shadow mb-10">
             <iframe
-              src={video.url}
+              src={toYouTubeEmbedUrl(video.url)}
               title={video.title}
               className="w-full h-full"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
