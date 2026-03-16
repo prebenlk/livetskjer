@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { Header } from "@/components/Header";
+import { useAuth } from "@/hooks/use-auth";
 import { useThemes, useVideos, useCreateVideo, useDeleteVideo, useDeleteTheme } from "@/hooks/use-data";
 import { getIcon } from "@/lib/icons";
-import { Plus, Pencil, Trash2, Video as VideoIcon, LayoutGrid } from "lucide-react";
+import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
