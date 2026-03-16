@@ -52,7 +52,7 @@ const Index = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15, duration: 0.5 }}
-              className="mb-14 max-w-3xl"
+              className="mb-14 max-w-3xl mx-auto"
             >
               <div className="bg-card/60 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
                 <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
