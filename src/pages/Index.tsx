@@ -3,7 +3,7 @@ import { ThemeCard } from "@/components/ThemeCard";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
 import { motion } from "framer-motion";
-
+import { Sun } from "lucide-react";
 
 const Index = () => {
   const { data: themes, isLoading } = useThemes();
