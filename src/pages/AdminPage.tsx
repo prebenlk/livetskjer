@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Navigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { useAuth } from "@/hooks/use-auth";
@@ -7,9 +7,10 @@ import {
   useCreateTheme, useUpdateTheme, useDeleteTheme,
   useCreateVideo, useUpdateVideo, useDeleteVideo,
   useSiteSettings, useUpdateSiteSetting,
+  useFeedback, usePageViews,
 } from "@/hooks/use-data";
 import { getIcon, iconMap } from "@/lib/icons";
-import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check, Settings } from "lucide-react";
+import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check, Settings, BarChart3, Frown, Meh, Smile, Eye, MessageSquare, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
