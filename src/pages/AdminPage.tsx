@@ -178,20 +178,30 @@ function ThemeDetail({
   theme,
   videos,
   themes,
+  resources,
   onUpdateTheme,
   onDeleteTheme,
   onCreateVideo,
   onUpdateVideo,
   onDeleteVideo,
+  onCreateResource,
+  onUpdateResource,
+  onDeleteResource,
+  onUploadImage,
 }: {
   theme: any;
   videos: any[];
   themes: any[];
+  resources: any[];
   onUpdateTheme: any;
   onDeleteTheme: any;
   onCreateVideo: any;
   onUpdateVideo: any;
   onDeleteVideo: any;
+  onCreateResource: any;
+  onUpdateResource: any;
+  onDeleteResource: any;
+  onUploadImage: any;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingTheme, setIsEditingTheme] = useState(false);
@@ -201,9 +211,27 @@ function ThemeDetail({
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
   const [editVideoForm, setEditVideoForm] = useState({ title: "", description: "", url: "", duration: "" });
 
+  // Resource state
+  const [showAddResource, setShowAddResource] = useState(false);
+  const [newResource, setNewResource] = useState({ title: "", description: "", type: "book", link: "", image_url: "" });
+  const [editingResourceId, setEditingResourceId] = useState<string | null>(null);
+  const [editResourceForm, setEditResourceForm] = useState({ title: "", description: "", type: "book", link: "", image_url: "" });
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const editFileInputRef = useRef<HTMLInputElement>(null);
+
   const themeVideos = videos.filter((v) => v.theme_id === theme.id);
+  const themeResources = resources.filter((r: any) => r.theme_id === theme.id);
   const Icon = getIcon(theme.icon);
   const inputClass = "rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground w-full";
+
+  const RESOURCE_TYPES = [
+    { value: "book", label: "Bok" },
+    { value: "podcast", label: "Podcast" },
+    { value: "article", label: "Artikkel" },
+    { value: "tool", label: "Verktøy" },
+    { value: "other", label: "Annet" },
+  ];
 
   const startEditTheme = () => {
     setEditForm({ title: theme.title, description: theme.description, icon: theme.icon });
@@ -242,9 +270,49 @@ function ThemeDetail({
     });
   };
 
+  const handleImageUpload = async (file: File, target: "new" | "edit") => {
+    setUploadingImage(true);
+    try {
+      const url = await onUploadImage.mutateAsync(file);
+      if (target === "new") {
+        setNewResource({ ...newResource, image_url: url });
+      } else {
+        setEditResourceForm({ ...editResourceForm, image_url: url });
+      }
+      toast.success("Bilde lastet opp!");
+    } catch (e: any) {
+      toast.error("Feil ved opplasting: " + e.message);
+    }
+    setUploadingImage(false);
+  };
+
+  const addResource = () => {
+    if (!newResource.title) { toast.error("Tittel er påkrevd"); return; }
+    onCreateResource.mutate({ ...newResource, theme_id: theme.id }, {
+      onSuccess: () => {
+        toast.success("Ressurs lagt til!");
+        setShowAddResource(false);
+        setNewResource({ title: "", description: "", type: "book", link: "", image_url: "" });
+      },
+      onError: (e: any) => toast.error(e.message),
+    });
+  };
+
+  const startEditResource = (resource: any) => {
+    setEditingResourceId(resource.id);
+    setEditResourceForm({ title: resource.title, description: resource.description, type: resource.type, link: resource.link || "", image_url: resource.image_url || "" });
+  };
+
+  const saveResource = () => {
+    if (!editingResourceId) return;
+    onUpdateResource.mutate({ id: editingResourceId, ...editResourceForm }, {
+      onSuccess: () => { toast.success("Ressurs oppdatert!"); setEditingResourceId(null); },
+      onError: (e: any) => toast.error(e.message),
+    });
+  };
+
   return (
     <div className="bg-card rounded-2xl card-shadow border border-border/50 overflow-hidden">
-      {/* Theme header - clickable to expand */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full p-6 flex items-center justify-between hover:bg-muted/30 transition-colors"
@@ -262,13 +330,12 @@ function ThemeDetail({
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <span className="text-xs font-medium text-muted-foreground bg-muted rounded-full px-3 py-1">
-            {themeVideos.length} videoer
+            {themeVideos.length} videoer · {themeResources.length} ressurser
           </span>
           {isExpanded ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
         </div>
       </button>
 
-      {/* Expanded content */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -347,7 +414,6 @@ function ThemeDetail({
                   </button>
                 </div>
 
-                {/* Add video form */}
                 <AnimatePresence>
                   {showAddVideo && (
                     <motion.div
@@ -371,7 +437,6 @@ function ThemeDetail({
                   )}
                 </AnimatePresence>
 
-                {/* Video list */}
                 {themeVideos.length === 0 ? (
                   <p className="text-sm text-muted-foreground py-4 text-center">Ingen videoer lagt til ennå.</p>
                 ) : (
@@ -415,6 +480,166 @@ function ThemeDetail({
                                     if (confirm("Slette denne videoen?")) {
                                       onDeleteVideo.mutate(video.id, {
                                         onSuccess: () => toast.success("Video slettet"),
+                                        onError: (e: any) => toast.error(e.message),
+                                      });
+                                    }
+                                  }}
+                                  className="p-2 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive"
+                                  title="Slett"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* ========== RESOURCES SECTION ========== */}
+              <div className="p-6 border-t border-border">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+                    <BookOpen className="w-4 h-4 inline mr-1.5 -mt-0.5" />
+                    Ressurser ({themeResources.length})
+                  </h3>
+                  <button
+                    onClick={() => setShowAddResource(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Legg til ressurs
+                  </button>
+                </div>
+
+                {/* Add resource form */}
+                <AnimatePresence>
+                  {showAddResource && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mb-4 p-5 rounded-xl bg-muted/40 border border-border/50 overflow-hidden"
+                    >
+                      <h4 className="text-sm font-medium text-foreground mb-3">Ny ressurs i «{theme.title}»</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <input placeholder="Tittel *" value={newResource.title} onChange={(e) => setNewResource({ ...newResource, title: e.target.value })} className={inputClass} />
+                        <select value={newResource.type} onChange={(e) => setNewResource({ ...newResource, type: e.target.value })} className={inputClass}>
+                          {RESOURCE_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                        </select>
+                        <input placeholder="Lenke (valgfritt)" value={newResource.link} onChange={(e) => setNewResource({ ...newResource, link: e.target.value })} className={inputClass} />
+                        <div className="flex items-center gap-2">
+                          <input
+                            placeholder="Bilde-URL (valgfritt)"
+                            value={newResource.image_url}
+                            onChange={(e) => setNewResource({ ...newResource, image_url: e.target.value })}
+                            className={inputClass}
+                          />
+                          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleImageUpload(file, "new");
+                          }} />
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={uploadingImage}
+                            className="shrink-0 p-3 rounded-xl border border-input bg-background hover:bg-accent transition-colors text-muted-foreground"
+                            title="Last opp bilde"
+                          >
+                            <Upload className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <textarea placeholder="Beskrivelse" value={newResource.description} onChange={(e) => setNewResource({ ...newResource, description: e.target.value })} className={`md:col-span-2 ${inputClass} min-h-[80px]`} />
+                      </div>
+                      {newResource.image_url && (
+                        <div className="mt-3">
+                          <img src={newResource.image_url} alt="Preview" className="w-20 h-28 object-cover rounded-lg border border-border" />
+                        </div>
+                      )}
+                      <div className="flex gap-2 mt-3">
+                        <button onClick={addResource} disabled={uploadingImage} className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">
+                          {uploadingImage ? "Laster opp..." : "Lagre"}
+                        </button>
+                        <button onClick={() => { setShowAddResource(false); setNewResource({ title: "", description: "", type: "book", link: "", image_url: "" }); }} className="px-4 py-2 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium hover:bg-accent">Avbryt</button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Resource list */}
+                {themeResources.length === 0 ? (
+                  <p className="text-sm text-muted-foreground py-4 text-center">Ingen ressurser lagt til ennå.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {themeResources.map((resource: any) => {
+                      const isEditing = editingResourceId === resource.id;
+                      const typeLabel = RESOURCE_TYPES.find(t => t.value === resource.type)?.label ?? resource.type;
+                      return (
+                        <div key={resource.id} className="rounded-xl border border-border/50 bg-background p-4">
+                          {isEditing ? (
+                            <div className="space-y-3">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <input value={editResourceForm.title} onChange={(e) => setEditResourceForm({ ...editResourceForm, title: e.target.value })} className={inputClass} placeholder="Tittel" />
+                                <select value={editResourceForm.type} onChange={(e) => setEditResourceForm({ ...editResourceForm, type: e.target.value })} className={inputClass}>
+                                  {RESOURCE_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                                </select>
+                                <input value={editResourceForm.link} onChange={(e) => setEditResourceForm({ ...editResourceForm, link: e.target.value })} className={inputClass} placeholder="Lenke" />
+                                <div className="flex items-center gap-2">
+                                  <input value={editResourceForm.image_url} onChange={(e) => setEditResourceForm({ ...editResourceForm, image_url: e.target.value })} className={inputClass} placeholder="Bilde-URL" />
+                                  <input ref={editFileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) handleImageUpload(file, "edit");
+                                  }} />
+                                  <button onClick={() => editFileInputRef.current?.click()} disabled={uploadingImage} className="shrink-0 p-3 rounded-xl border border-input bg-background hover:bg-accent transition-colors text-muted-foreground" title="Last opp bilde">
+                                    <Upload className="w-4 h-4" />
+                                  </button>
+                                </div>
+                                <textarea value={editResourceForm.description} onChange={(e) => setEditResourceForm({ ...editResourceForm, description: e.target.value })} className={`md:col-span-2 ${inputClass} min-h-[60px]`} placeholder="Beskrivelse" />
+                              </div>
+                              {editResourceForm.image_url && (
+                                <img src={editResourceForm.image_url} alt="Preview" className="w-20 h-28 object-cover rounded-lg border border-border" />
+                              )}
+                              <div className="flex gap-2">
+                                <button onClick={saveResource} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">
+                                  <Check className="w-3.5 h-3.5" /> Lagre
+                                </button>
+                                <button onClick={() => setEditingResourceId(null)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium hover:bg-accent">
+                                  <X className="w-3.5 h-3.5" /> Avbryt
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-4">
+                              {resource.image_url && (
+                                <img src={resource.image_url} alt={resource.title} className="w-12 h-16 object-cover rounded-lg border border-border shrink-0" />
+                              )}
+                              {!resource.image_url && (
+                                <div className="w-12 h-16 rounded-lg border border-border bg-muted/50 flex items-center justify-center shrink-0">
+                                  <Image className="w-5 h-5 text-muted-foreground" />
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <p className="font-medium text-foreground text-sm truncate">{resource.title}</p>
+                                  <span className="text-xs bg-muted text-muted-foreground rounded-full px-2 py-0.5 shrink-0">{typeLabel}</span>
+                                </div>
+                                {resource.description && <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{resource.description}</p>}
+                                {resource.link && (
+                                  <a href={resource.link} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1 mt-0.5">
+                                    <ExternalLink className="w-3 h-3" /> Åpne lenke
+                                  </a>
+                                )}
+                              </div>
+                              <div className="flex gap-1 shrink-0">
+                                <button onClick={() => startEditResource(resource)} className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground" title="Rediger">
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    if (confirm("Slette denne ressursen?")) {
+                                      onDeleteResource.mutate(resource.id, {
+                                        onSuccess: () => toast.success("Ressurs slettet"),
                                         onError: (e: any) => toast.error(e.message),
                                       });
                                     }
