@@ -1,14 +1,17 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { Header } from "@/components/Header";
+import { useAuth } from "@/hooks/use-auth";
 import { useThemes, useVideos, useCreateVideo, useDeleteVideo, useDeleteTheme } from "@/hooks/use-data";
 import { getIcon } from "@/lib/icons";
-import { Plus, Pencil, Trash2, Video as VideoIcon, LayoutGrid } from "lucide-react";
+import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 type Tab = "themes" | "videos";
 
 const AdminPage = () => {
+  const { user, loading, signOut } = useAuth();
   const [tab, setTab] = useState<Tab>("themes");
   const { data: themes } = useThemes();
   const { data: videos } = useVideos();
@@ -17,6 +20,19 @@ const AdminPage = () => {
   const deleteTheme = useDeleteTheme();
   const [showAddVideo, setShowAddVideo] = useState(false);
   const [newVideo, setNewVideo] = useState({ title: "", description: "", url: "", theme_id: "", duration: "" });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Laster...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
 
   const tabs: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
     { id: "themes", label: "Temaer", icon: LayoutGrid },
@@ -42,7 +58,16 @@ const AdminPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="max-w-5xl mx-auto px-6 py-10">
-        <h1 className="text-3xl font-semibold text-foreground mb-8">Adminpanel</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-semibold text-foreground">Adminpanel</h1>
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium hover:bg-accent transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            Logg ut
+          </button>
+        </div>
 
         <div className="flex gap-2 mb-8">
           {tabs.map(({ id, label, icon: Icon }) => (
