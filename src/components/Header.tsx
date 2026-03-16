@@ -28,6 +28,12 @@ export function Header() {
           >
             Verktøy
           </Link>
+          <Link
+            to="/fem-grep"
+            className="px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+          >
+            5 grep
+          </Link>
           {isAdmin ? (
             <Link
               to="/admin"
