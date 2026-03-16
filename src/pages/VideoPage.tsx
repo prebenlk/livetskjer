@@ -82,20 +82,27 @@ const VideoPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="max-w-4xl mx-auto px-6 py-10">
+      <main className="max-w-4xl mx-auto px-6 py-10 md:py-12">
         <Link
           to={`/tema/${themeId}`}
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 group"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
           Tilbake til {theme.title}
         </Link>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{video.title}</h1>
-          <p className="text-muted-foreground mb-8 max-w-2xl">{video.description}</p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-3 leading-tight">
+            {video.title}
+          </h1>
+          <p className="text-muted-foreground mb-8 max-w-2xl leading-relaxed">{video.description}</p>
 
-          <div className="aspect-video rounded-2xl overflow-hidden bg-card border border-border/50 card-shadow mb-10">
+          {/* Video player */}
+          <div className="aspect-video rounded-2xl overflow-hidden bg-card border border-border/30 card-shadow mb-12 relative">
             <iframe
               src={toYouTubeEmbedUrl(video.url)}
               title={video.title}
@@ -105,32 +112,36 @@ const VideoPage = () => {
             />
           </div>
 
-          <div className="bg-card rounded-2xl card-shadow border border-border/50 p-8">
-            <h3 className="font-semibold text-foreground mb-5">
+          {/* Feedback section */}
+          <div className="glass rounded-2xl border border-border/30 p-8 md:p-10">
+            <h3 className="font-bold text-foreground text-lg mb-6">
               {submitted ? "Takk for tilbakemeldingen! 🙏" : "Var denne videoen nyttig?"}
             </h3>
 
             {!submitted ? (
-              <div className="space-y-5">
+              <div className="space-y-6">
                 {/* Rating buttons */}
-                <div className="flex gap-4">
+                <div className="flex gap-3 md:gap-4">
                   {feedbackOptions.map(({ icon: Icon, label, value, color }) => (
                     <button
                       key={value}
                       onClick={() => handleSelectRating(value)}
-                      className={`flex flex-col items-center gap-2.5 p-5 rounded-xl border transition-all bg-background ${
+                      className={`flex flex-col items-center gap-3 p-5 md:p-6 rounded-xl border transition-all duration-200 bg-background/50 ${
                         selectedRating === value
-                          ? "border-primary ring-2 ring-primary/20 scale-105"
-                          : "border-border/50 hover:border-border hover:card-shadow-hover"
+                          ? "border-primary ring-2 ring-primary/20 shadow-lg"
+                          : "border-border/30 hover:border-border/60 hover:bg-background/80"
                       }`}
                     >
-                      <Icon className="w-7 h-7" style={{ color }} />
+                      <Icon
+                        className={`w-7 h-7 transition-transform ${selectedRating === value ? "scale-110" : ""}`}
+                        style={{ color }}
+                      />
                       <span className="text-xs text-muted-foreground font-medium">{label}</span>
                     </button>
                   ))}
                 </div>
 
-                {/* Comment box appears after selecting a rating */}
+                {/* Comment box */}
                 <AnimatePresence>
                   {selectedRating && selectedOption && (
                     <motion.div
@@ -139,18 +150,18 @@ const VideoPage = () => {
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
-                      <label className="text-sm font-medium text-foreground block mb-2">
+                      <label className="text-sm font-semibold text-foreground block mb-2.5">
                         {selectedOption.question}
                       </label>
                       <textarea
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         placeholder="Skriv din tilbakemelding her (valgfritt)..."
-                        className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground min-h-[100px] resize-none"
+                        className="w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground min-h-[100px] resize-none transition-colors"
                       />
                       <button
                         onClick={handleSubmit}
-                        className="mt-3 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+                        className="mt-4 flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-[hsl(var(--primary)/0.2)]"
                       >
                         <Send className="w-4 h-4" />
                         Send tilbakemelding

@@ -10,12 +10,14 @@ interface ThemeCardProps {
 }
 
 const THEME_COLORS = [
-  { bg: "from-[hsl(230,70%,65%)] to-[hsl(250,60%,50%)]", accent: "hsl(230, 70%, 65%)", glow: "hsl(230, 70%, 65%)" },
-  { bg: "from-[hsl(280,60%,60%)] to-[hsl(300,50%,45%)]", accent: "hsl(280, 60%, 60%)", glow: "hsl(280, 60%, 60%)" },
-  { bg: "from-[hsl(15,80%,58%)] to-[hsl(35,75%,50%)]", accent: "hsl(15, 80%, 58%)", glow: "hsl(15, 80%, 58%)" },
-  { bg: "from-[hsl(340,65%,58%)] to-[hsl(355,60%,48%)]", accent: "hsl(340, 65%, 58%)", glow: "hsl(340, 65%, 58%)" },
-  { bg: "from-[hsl(168,50%,50%)] to-[hsl(185,55%,40%)]", accent: "hsl(168, 50%, 50%)", glow: "hsl(168, 50%, 50%)" },
-  { bg: "from-[hsl(200,65%,55%)] to-[hsl(220,60%,45%)]", accent: "hsl(200, 65%, 55%)", glow: "hsl(200, 65%, 55%)" },
+  { gradient: "from-[hsl(230,70%,62%)] to-[hsl(255,55%,52%)]", accent: "hsl(230, 70%, 65%)" },
+  { gradient: "from-[hsl(275,55%,58%)] to-[hsl(295,50%,46%)]", accent: "hsl(275, 55%, 62%)" },
+  { gradient: "from-[hsl(15,80%,56%)] to-[hsl(35,75%,48%)]", accent: "hsl(18, 80%, 58%)" },
+  { gradient: "from-[hsl(340,65%,56%)] to-[hsl(355,58%,46%)]", accent: "hsl(340, 65%, 58%)" },
+  { gradient: "from-[hsl(168,55%,46%)] to-[hsl(185,50%,38%)]", accent: "hsl(168, 55%, 48%)" },
+  { gradient: "from-[hsl(200,65%,52%)] to-[hsl(220,55%,44%)]", accent: "hsl(200, 65%, 55%)" },
+  { gradient: "from-[hsl(45,70%,52%)] to-[hsl(30,65%,46%)]", accent: "hsl(45, 70%, 55%)" },
+  { gradient: "from-[hsl(155,50%,46%)] to-[hsl(170,45%,38%)]", accent: "hsl(155, 50%, 48%)" },
 ];
 
 export function ThemeCard({ theme, index }: ThemeCardProps) {
@@ -23,39 +25,41 @@ export function ThemeCard({ theme, index }: ThemeCardProps) {
   const color = THEME_COLORS[index % THEME_COLORS.length];
 
   return (
-    <Link to={`/tema/${theme.id}`}>
+    <Link to={`/tema/${theme.id}`} className="block h-full">
       <motion.div
-        whileHover={{ y: -6, scale: 1.02 }}
-        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        className="group relative overflow-hidden rounded-2xl card-shadow hover:card-shadow-hover transition-shadow cursor-pointer h-full"
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        className="group relative overflow-hidden rounded-2xl card-shadow hover:card-shadow-hover transition-all duration-300 cursor-pointer h-full"
       >
-        {/* Gradient top band */}
-        <div className={`h-2 w-full bg-gradient-to-r ${color.bg}`} />
+        {/* Top gradient accent — thinner, more refined */}
+        <div className={`h-1.5 w-full bg-gradient-to-r ${color.gradient}`} />
 
-        <div className="bg-card border border-border/50 border-t-0 p-7 pb-6 rounded-b-2xl">
-          {/* Icon with colored glow */}
+        <div className="bg-card border border-border/30 border-t-0 rounded-b-2xl p-7 pb-6 flex flex-col h-full relative overflow-hidden">
+          {/* Subtle hover glow */}
           <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 relative"
-            style={{ backgroundColor: `${color.accent}20` }}
+            className="absolute -top-20 -right-20 w-40 h-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-3xl pointer-events-none"
+            style={{ backgroundColor: `${color.accent}12` }}
+          />
+
+          {/* Icon */}
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 relative transition-transform duration-300 group-hover:scale-110"
+            style={{ backgroundColor: `${color.accent}15` }}
           >
-            <div
-              className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"
-              style={{ backgroundColor: `${color.glow}30` }}
-            />
-            <Icon className="w-7 h-7 relative z-10" style={{ color: color.accent }} />
+            <Icon className="w-6 h-6 relative z-10" style={{ color: color.accent }} />
           </div>
 
-          <h3 className="text-xl font-bold text-foreground mb-2">{theme.title}</h3>
-          <p className="text-muted-foreground leading-relaxed text-sm line-clamp-2 mb-5">
+          <h3 className="text-lg font-bold text-foreground mb-2 leading-snug">{theme.title}</h3>
+          <p className="text-muted-foreground leading-relaxed text-sm line-clamp-2 mb-6 flex-1">
             {theme.description}
           </p>
 
           <div
-            className="flex items-center font-semibold text-sm transition-colors"
+            className="flex items-center font-semibold text-sm transition-all group-hover:gap-3 gap-2"
             style={{ color: color.accent }}
           >
             Utforsk tema
-            <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1.5" />
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </div>
         </div>
       </motion.div>
