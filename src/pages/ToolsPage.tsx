@@ -30,6 +30,7 @@ export function markThemeVisited(themeId: string) {
 }
 
 const ToolsPage = () => {
+  const [openFormToolId, setOpenFormToolId] = useState<string | null>(null);
   const { themeId } = useParams();
   const navigate = useNavigate();
   const { data: themes } = useThemes();
