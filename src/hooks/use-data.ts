@@ -171,3 +171,46 @@ export function useDeleteVideo() {
     },
   });
 }
+
+// ========== FEEDBACK (read) ==========
+
+export function useFeedback() {
+  return useQuery({
+    queryKey: ["feedback"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("feedback")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
+// ========== PAGE VIEWS ==========
+
+export function useTrackPageView() {
+  return useMutation({
+    mutationFn: async (page: string) => {
+      const { error } = await supabase
+        .from("page_views" as any)
+        .insert({ page, referrer: document.referrer || null } as any);
+      if (error) throw error;
+    },
+  });
+}
+
+export function usePageViews() {
+  return useQuery({
+    queryKey: ["page_views"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("page_views" as any)
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+}
