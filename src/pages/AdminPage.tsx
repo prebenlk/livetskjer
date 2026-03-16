@@ -22,9 +22,9 @@ const ICON_OPTIONS = Object.keys(iconMap);
 
 // ========== STATS TAB COMPONENT ==========
 const RATING_EMOJI: Record<string, { icon: typeof Smile; label: string; color: string }> = {
-  positive: { icon: Smile, label: "Positiv", color: "text-green-500" },
-  neutral: { icon: Meh, label: "Nøytral", color: "text-yellow-500" },
-  negative: { icon: Frown, label: "Negativ", color: "text-red-500" },
+  good: { icon: Smile, label: "Positiv", color: "text-green-500" },
+  ok: { icon: Meh, label: "Nøytral", color: "text-yellow-500" },
+  bad: { icon: Frown, label: "Negativ", color: "text-red-500" },
 };
 
 function StatsTab({ themes, videos, feedback, pageViews }: {
