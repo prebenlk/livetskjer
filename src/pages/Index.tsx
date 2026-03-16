@@ -27,13 +27,9 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-16 max-w-2xl"
+            className="mb-16 text-center mx-auto max-w-3xl"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[hsl(var(--primary)/0.12)] text-[hsl(var(--primary))] text-sm font-medium mb-6">
-              <span className="w-2 h-2 rounded-full bg-[hsl(var(--primary))] animate-pulse" />
-              Helt anonymt
-            </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-5 leading-[1.1]">
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-6 leading-[1.1]">
               {heroTitle.includes("bedre hverdag") ? (
                 <>
                   {heroTitle.split("bedre hverdag")[0]}
@@ -45,7 +41,7 @@ const Index = () => {
                 heroTitle
               )}
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-[55ch] leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-[55ch] mx-auto leading-relaxed">
               {heroSubtitle}
             </p>
           </motion.div>
@@ -56,10 +52,10 @@ const Index = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15, duration: 0.5 }}
-              className="mb-14 max-w-3xl"
+              className="mb-14 max-w-3xl mx-auto"
             >
               <div className="bg-card/60 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
-                <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                <p className="text-muted-foreground leading-relaxed text-base md:text-lg text-center">
                   {introText}
                 </p>
               </div>
