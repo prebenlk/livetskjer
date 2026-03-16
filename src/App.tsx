@@ -10,6 +10,7 @@ import ThemePage from "./pages/ThemePage.tsx";
 import VideoPage from "./pages/VideoPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import ToolsPage from "./pages/ToolsPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/tema/:themeId" element={<ThemePage />} />
             <Route path="/tema/:themeId/video/:videoId" element={<VideoPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/verktoy" element={<ToolsPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
