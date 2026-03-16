@@ -42,7 +42,7 @@ function StatsTab({ themes, videos, feedback, pageViews }: {
 
   const feedbackCount = feedback?.length ?? 0;
   const ratingCounts = useMemo(() => {
-    const counts: Record<string, number> = { positive: 0, neutral: 0, negative: 0 };
+    const counts: Record<string, number> = { good: 0, ok: 0, bad: 0 };
     feedback?.forEach((f: any) => { if (counts[f.rating] !== undefined) counts[f.rating]++; });
     return counts;
   }, [feedback]);
