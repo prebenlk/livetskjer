@@ -221,6 +221,10 @@ const ToolsPage = () => {
         </main>
       </div>
 
+      {openFormToolId && (
+        <ThoughtTestingForm onClose={() => setOpenFormToolId(null)} />
+      )}
+
       <HelpButton />
     </div>
   );
