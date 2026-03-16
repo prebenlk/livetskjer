@@ -29,11 +29,14 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             className="mb-16 text-center mx-auto max-w-3xl"
           >
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-6 leading-[1.1]">
+            <p className="text-lg md:text-xl font-bold tracking-wide text-primary uppercase mb-4">
+              Livet skjer
+            </p>
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-8 leading-[1.1]">
               {heroTitle.includes("bedre hverdag") ? (
                 <>
                   {heroTitle.split("bedre hverdag")[0]}
-                  <span className="block bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(var(--theme-sleep))] to-[hsl(var(--theme-anxiety))] bg-clip-text text-transparent">
+                  <span className="block mt-2 bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(var(--theme-sleep))] to-[hsl(var(--theme-anxiety))] bg-clip-text text-transparent">
                     bedre hverdag
                   </span>
                 </>
@@ -41,7 +44,7 @@ const Index = () => {
                 heroTitle
               )}
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-[55ch] mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-[55ch] mx-auto leading-loose">
               {heroSubtitle}
             </p>
           </motion.div>
