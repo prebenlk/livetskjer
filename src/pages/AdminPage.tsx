@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { useAuth } from "@/hooks/use-auth";
 import { useThemes, useVideos, useCreateVideo, useDeleteVideo, useDeleteTheme } from "@/hooks/use-data";
