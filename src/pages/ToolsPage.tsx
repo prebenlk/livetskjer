@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useThemes, useAllThemeResources } from "@/hooks/use-data";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
+import { ThoughtTestingForm } from "@/components/ThoughtTestingForm";
 import { getIcon } from "@/lib/icons";
 import { motion } from "framer-motion";
-import { Wrench, ExternalLink, ChevronRight, ArrowLeft, FileText, Download } from "lucide-react";
+import { Wrench, ExternalLink, ChevronRight, ArrowLeft, FileText, PenLine } from "lucide-react";
 
 const THEME_COLORS = [
   { accent: "hsl(230, 70%, 65%)", gradient: "from-[hsl(230,70%,65%)] to-[hsl(255,55%,52%)]" },
