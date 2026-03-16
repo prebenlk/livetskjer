@@ -234,7 +234,7 @@ function ThemeDetail({
   ];
 
   const startEditTheme = () => {
-    setEditForm({ title: theme.title, description: theme.description, icon: theme.icon });
+    setEditForm({ title: theme.title, description: theme.description, icon: theme.icon, intro_text: theme.intro_text || "" });
     setIsEditingTheme(true);
   };
 
