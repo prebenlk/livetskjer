@@ -13,7 +13,7 @@ export function Header() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--theme-sleep))] flex items-center justify-center shadow-lg shadow-[hsl(var(--primary)/0.25)] group-hover:shadow-[hsl(var(--primary)/0.4)] transition-shadow">
             <Leaf className="w-4.5 h-4.5 text-[hsl(var(--primary-foreground))]" />
           </div>
-          <span className="tracking-tight">Livetskjer.no</span>
+          <span className="tracking-tight">Nårlivetskjer.no</span>
         </Link>
         <nav className="flex items-center gap-1 text-sm">
           <Link
