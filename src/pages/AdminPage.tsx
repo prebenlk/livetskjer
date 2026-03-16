@@ -29,8 +29,22 @@ const AdminPage = () => {
     );
   }
 
+  const ADMIN_EMAIL = "preben-karlsen@hotmail.com";
+
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (user.email !== ADMIN_EMAIL) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold text-foreground">Ingen tilgang</h1>
+          <p className="text-muted-foreground">Du har ikke admin-tilgang.</p>
+          <Link to="/" className="text-primary hover:underline">Gå til forsiden</Link>
+        </div>
+      </div>
+    );
   }
 
 

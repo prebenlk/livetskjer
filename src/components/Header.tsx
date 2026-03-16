@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 export function Header() {
   const { user } = useAuth();
+  const isAdmin = user?.email === "preben-karlsen@hotmail.com";
 
   return (
     <header className="w-full border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-40">
@@ -14,9 +15,9 @@ export function Header() {
         </Link>
         <nav className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground transition-colors">Hjem</Link>
-          {user ? (
+          {isAdmin ? (
             <Link to="/admin" className="hover:text-foreground transition-colors">Admin</Link>
-          ) : (
+          ) : user ? null : (
             <Link to="/login" className="hover:text-foreground transition-colors">Logg inn</Link>
           )}
         </nav>
