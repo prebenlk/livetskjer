@@ -103,6 +103,14 @@ function FiveTipCard({ tip, index }: { tip: typeof FIVE_TIPS[number]; index: num
 }
 
 const Index = () => {
+  const { data: themes, isLoading } = useThemes();
+  const { data: settings } = useSiteSettings();
+
+  const heroTitle = settings?.hero_title ?? "Verktøy for en bedre hverdag";
+  const heroSubtitle = settings?.hero_subtitle ?? "";
+  const introText = settings?.intro_text ?? "";
+
+  return (
     <div className="min-h-screen bg-background">
       <Header />
 
