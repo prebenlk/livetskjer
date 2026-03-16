@@ -13,7 +13,7 @@ import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check,
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
-type Tab = "themes" | "videos";
+type Tab = "themes" | "videos" | "settings";
 
 const ADMIN_EMAIL = "preben-karlsen@hotmail.com";
 const ICON_OPTIONS = Object.keys(iconMap);
