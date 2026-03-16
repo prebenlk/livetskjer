@@ -494,7 +494,7 @@ const AdminPage = () => {
               </button>
             </div>
           </div>
-        )
+        )}
       </div>
     </div>
   );
