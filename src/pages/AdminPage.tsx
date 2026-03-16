@@ -205,7 +205,7 @@ function ThemeDetail({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingTheme, setIsEditingTheme] = useState(false);
-  const [editForm, setEditForm] = useState({ title: "", description: "", icon: "" });
+  const [editForm, setEditForm] = useState({ title: "", description: "", icon: "", intro_text: "" });
   const [showAddVideo, setShowAddVideo] = useState(false);
   const [newVideo, setNewVideo] = useState({ title: "", description: "", url: "", duration: "" });
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
