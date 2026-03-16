@@ -40,11 +40,16 @@ const Index = () => {
               transition={{ delay: 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="mb-10 flex flex-col items-center"
             >
-              <div className="flex flex-col items-center leading-none">
-                <span className="text-2xl md:text-3xl font-medium tracking-[0.2em] uppercase text-muted-foreground/70">
+              {/* Icon */}
+              <div className="mb-3 relative">
+                <Sun className="w-10 h-10 md:w-12 md:h-12 text-primary" strokeWidth={1.5} />
+                <div className="absolute inset-0 blur-xl bg-[hsl(var(--primary)/0.3)] rounded-full" />
+              </div>
+              <div className="flex flex-col items-center leading-none" style={{ fontFamily: "'DM Serif Display', serif" }}>
+                <span className="text-2xl md:text-3xl tracking-[0.25em] uppercase text-muted-foreground/70">
                   Livet
                 </span>
-                <span className="text-5xl md:text-7xl font-extrabold tracking-tight uppercase text-gradient bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(168,65%,60%)] to-[hsl(var(--theme-sleep))]">
+                <span className="text-5xl md:text-7xl tracking-tight uppercase text-gradient bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(168,65%,60%)] to-[hsl(var(--theme-sleep))]">
                   Skjer
                 </span>
               </div>
