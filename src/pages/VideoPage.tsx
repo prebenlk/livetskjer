@@ -5,6 +5,7 @@ import { HelpButton } from "@/components/HelpButton";
 import { ArrowLeft, Frown, Meh, Smile, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { toYouTubeEmbedUrl } from "@/lib/utils";
 
 const feedbackOptions = [
   {
