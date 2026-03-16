@@ -22,9 +22,9 @@ const ICON_OPTIONS = Object.keys(iconMap);
 
 // ========== STATS TAB COMPONENT ==========
 const RATING_EMOJI: Record<string, { icon: typeof Smile; label: string; color: string }> = {
-  positive: { icon: Smile, label: "Positiv", color: "text-green-500" },
-  neutral: { icon: Meh, label: "Nøytral", color: "text-yellow-500" },
-  negative: { icon: Frown, label: "Negativ", color: "text-red-500" },
+  good: { icon: Smile, label: "Positiv", color: "text-green-500" },
+  ok: { icon: Meh, label: "Nøytral", color: "text-yellow-500" },
+  bad: { icon: Frown, label: "Negativ", color: "text-red-500" },
 };
 
 function StatsTab({ themes, videos, feedback, pageViews }: {
@@ -42,17 +42,17 @@ function StatsTab({ themes, videos, feedback, pageViews }: {
 
   const feedbackCount = feedback?.length ?? 0;
   const ratingCounts = useMemo(() => {
-    const counts: Record<string, number> = { positive: 0, neutral: 0, negative: 0 };
+    const counts: Record<string, number> = { good: 0, ok: 0, bad: 0 };
     feedback?.forEach((f: any) => { if (counts[f.rating] !== undefined) counts[f.rating]++; });
     return counts;
   }, [feedback]);
 
   const feedbackByVideo = useMemo(() => {
-    const map: Record<string, { title: string; count: number; positive: number; neutral: number; negative: number }> = {};
+    const map: Record<string, { title: string; count: number; good: number; ok: number; bad: number }> = {};
     feedback?.forEach((f: any) => {
       if (!map[f.video_id]) {
         const video = videos?.find((v: any) => v.id === f.video_id);
-        map[f.video_id] = { title: video?.title ?? "Ukjent video", count: 0, positive: 0, neutral: 0, negative: 0 };
+        map[f.video_id] = { title: video?.title ?? "Ukjent video", count: 0, good: 0, ok: 0, bad: 0 };
       }
       map[f.video_id].count++;
       if (f.rating in map[f.video_id]) (map[f.video_id] as any)[f.rating]++;
@@ -112,9 +112,9 @@ function StatsTab({ themes, videos, feedback, pageViews }: {
                   <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/50">
                     <span className="text-sm text-foreground truncate mr-4">{item.title}</span>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-xs text-green-500 tabular-nums">{item.positive} 😊</span>
-                      <span className="text-xs text-yellow-500 tabular-nums">{item.neutral} 😐</span>
-                      <span className="text-xs text-red-500 tabular-nums">{item.negative} 😟</span>
+                      <span className="text-xs text-green-500 tabular-nums">{item.good} 😊</span>
+                      <span className="text-xs text-yellow-500 tabular-nums">{item.ok} 😐</span>
+                      <span className="text-xs text-red-500 tabular-nums">{item.bad} 😟</span>
                       <span className="text-xs font-medium text-muted-foreground tabular-nums">({item.count})</span>
                     </div>
                   </div>
