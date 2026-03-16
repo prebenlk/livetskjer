@@ -88,6 +88,53 @@ export type Database = {
         }
         Relationships: []
       }
+      theme_resources: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          link: string | null
+          sort_order: number
+          theme_id: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          link?: string | null
+          sort_order?: number
+          theme_id: string
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          link?: string | null
+          sort_order?: number
+          theme_id?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_resources_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       themes: {
         Row: {
           created_at: string
