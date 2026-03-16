@@ -112,9 +112,9 @@ function StatsTab({ themes, videos, feedback, pageViews }: {
                   <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/50">
                     <span className="text-sm text-foreground truncate mr-4">{item.title}</span>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-xs text-green-500 tabular-nums">{item.positive} 😊</span>
-                      <span className="text-xs text-yellow-500 tabular-nums">{item.neutral} 😐</span>
-                      <span className="text-xs text-red-500 tabular-nums">{item.negative} 😟</span>
+                      <span className="text-xs text-green-500 tabular-nums">{item.good} 😊</span>
+                      <span className="text-xs text-yellow-500 tabular-nums">{item.ok} 😐</span>
+                      <span className="text-xs text-red-500 tabular-nums">{item.bad} 😟</span>
                       <span className="text-xs font-medium text-muted-foreground tabular-nums">({item.count})</span>
                     </div>
                   </div>
