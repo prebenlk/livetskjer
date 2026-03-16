@@ -19,6 +19,166 @@ type Tab = "themes" | "videos" | "settings" | "stats";
 const ADMIN_EMAIL = "preben-karlsen@hotmail.com";
 const ICON_OPTIONS = Object.keys(iconMap);
 
+// ========== STATS TAB COMPONENT ==========
+const RATING_EMOJI: Record<string, { icon: typeof Smile; label: string; color: string }> = {
+  positive: { icon: Smile, label: "Positiv", color: "text-green-500" },
+  neutral: { icon: Meh, label: "Nøytral", color: "text-yellow-500" },
+  negative: { icon: Frown, label: "Negativ", color: "text-red-500" },
+};
+
+function StatsTab({ themes, videos, feedback, pageViews }: {
+  themes: any[] | undefined;
+  videos: any[] | undefined;
+  feedback: any[] | undefined;
+  pageViews: any[] | undefined;
+}) {
+  const now = new Date();
+  const daysAgo = (d: number) => new Date(now.getTime() - d * 86400000);
+
+  const viewsToday = useMemo(() => pageViews?.filter((v: any) => new Date(v.created_at) >= daysAgo(1)).length ?? 0, [pageViews]);
+  const views7d = useMemo(() => pageViews?.filter((v: any) => new Date(v.created_at) >= daysAgo(7)).length ?? 0, [pageViews]);
+  const views30d = useMemo(() => pageViews?.filter((v: any) => new Date(v.created_at) >= daysAgo(30)).length ?? 0, [pageViews]);
+
+  const feedbackCount = feedback?.length ?? 0;
+  const ratingCounts = useMemo(() => {
+    const counts: Record<string, number> = { positive: 0, neutral: 0, negative: 0 };
+    feedback?.forEach((f: any) => { if (counts[f.rating] !== undefined) counts[f.rating]++; });
+    return counts;
+  }, [feedback]);
+
+  // Feedback per video
+  const feedbackByVideo = useMemo(() => {
+    const map: Record<string, { title: string; count: number; positive: number; neutral: number; negative: number }> = {};
+    feedback?.forEach((f: any) => {
+      if (!map[f.video_id]) {
+        const video = videos?.find((v: any) => v.id === f.video_id);
+        map[f.video_id] = { title: video?.title ?? "Ukjent video", count: 0, positive: 0, neutral: 0, negative: 0 };
+      }
+      map[f.video_id].count++;
+      if (f.rating in map[f.video_id]) (map[f.video_id] as any)[f.rating]++;
+    });
+    return Object.values(map).sort((a, b) => b.count - a.count);
+  }, [feedback, videos]);
+
+  // Most viewed pages
+  const topPages = useMemo(() => {
+    const map: Record<string, number> = {};
+    pageViews?.forEach((v: any) => { map[v.page] = (map[v.page] || 0) + 1; });
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  }, [pageViews]);
+
+  const statCard = (icon: typeof Eye, label: string, value: number | string, sub?: string) => (
+    <div className="bg-card rounded-2xl card-shadow border border-border/50 p-5 flex items-center gap-4">
+      <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+        {(() => { const I = icon; return <I className="w-5 h-5 text-primary" />; })()}
+      </div>
+      <div>
+        <p className="text-2xl font-bold text-foreground tabular-nums">{value}</p>
+        <p className="text-sm text-muted-foreground">{label}</p>
+        {sub && <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {statCard(Eye, "Visninger i dag", viewsToday)}
+        {statCard(TrendingUp, "Visninger 7d", views7d, `${views30d} siste 30d`)}
+        {statCard(LayoutGrid, "Temaer", themes?.length ?? 0)}
+        {statCard(VideoIcon, "Videoer", videos?.length ?? 0)}
+      </div>
+
+      {/* Feedback summary */}
+      <div className="bg-card rounded-2xl card-shadow border border-border/50 overflow-hidden">
+        <div className="p-6 border-b border-border">
+          <h2 className="font-medium text-foreground flex items-center gap-2">
+            <MessageSquare className="w-4 h-4" /> Tilbakemeldinger ({feedbackCount})
+          </h2>
+        </div>
+        <div className="p-6">
+          <div className="flex gap-6 mb-6">
+            {Object.entries(RATING_EMOJI).map(([key, { icon: RIcon, label, color }]) => (
+              <div key={key} className="flex items-center gap-2">
+                <RIcon className={`w-5 h-5 ${color}`} />
+                <span className="text-sm text-muted-foreground">{label}:</span>
+                <span className="font-bold text-foreground tabular-nums">{ratingCounts[key]}</span>
+              </div>
+            ))}
+          </div>
+
+          {feedbackByVideo.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-foreground mb-3">Per video</h3>
+              <div className="space-y-2">
+                {feedbackByVideo.map((item, i) => (
+                  <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/50">
+                    <span className="text-sm text-foreground truncate mr-4">{item.title}</span>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="text-xs text-green-500 tabular-nums">{item.positive} 😊</span>
+                      <span className="text-xs text-yellow-500 tabular-nums">{item.neutral} 😐</span>
+                      <span className="text-xs text-red-500 tabular-nums">{item.negative} 😟</span>
+                      <span className="text-xs font-medium text-muted-foreground tabular-nums">({item.count})</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Top pages */}
+      <div className="bg-card rounded-2xl card-shadow border border-border/50 overflow-hidden">
+        <div className="p-6 border-b border-border">
+          <h2 className="font-medium text-foreground flex items-center gap-2">
+            <Eye className="w-4 h-4" /> Mest besøkte sider
+          </h2>
+        </div>
+        <div className="divide-y divide-border">
+          {topPages.map(([page, count]) => (
+            <div key={page} className="px-6 py-3 flex items-center justify-between">
+              <span className="text-sm text-foreground font-mono">{page}</span>
+              <span className="text-sm font-medium text-muted-foreground tabular-nums">{count} visninger</span>
+            </div>
+          ))}
+          {topPages.length === 0 && (
+            <div className="p-6 text-sm text-muted-foreground">Ingen sidevisninger registrert ennå.</div>
+          )}
+        </div>
+      </div>
+
+      {/* Recent feedback comments */}
+      {feedback && feedback.filter((f: any) => f.comment).length > 0 && (
+        <div className="bg-card rounded-2xl card-shadow border border-border/50 overflow-hidden">
+          <div className="p-6 border-b border-border">
+            <h2 className="font-medium text-foreground">Siste kommentarer</h2>
+          </div>
+          <div className="divide-y divide-border">
+            {feedback.filter((f: any) => f.comment).slice(0, 20).map((f: any) => {
+              const video = videos?.find((v: any) => v.id === f.video_id);
+              const rInfo = RATING_EMOJI[f.rating];
+              const RIcon = rInfo?.icon ?? Meh;
+              return (
+                <div key={f.id} className="p-4 flex gap-3">
+                  <RIcon className={`w-5 h-5 shrink-0 mt-0.5 ${rInfo?.color ?? "text-muted-foreground"}`} />
+                  <div>
+                    <p className="text-sm text-foreground">{f.comment}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {video?.title ?? "Ukjent video"} · {new Date(f.created_at).toLocaleDateString("nb-NO")}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const AdminPage = () => {
   const { user, loading, signOut } = useAuth();
   const [tab, setTab] = useState<Tab>("stats");
