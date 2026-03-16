@@ -1,9 +1,98 @@
+import { useState } from "react";
 import { useThemes, useSiteSettings } from "@/hooks/use-data";
 import { ThemeCard } from "@/components/ThemeCard";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Eye, Activity, BookOpen, Users, Heart, ChevronDown, ExternalLink } from "lucide-react";
 import treeOfLife from "@/assets/tree-of-life.png";
+
+const FIVE_TIPS = [
+  {
+    icon: Eye,
+    title: "Vær oppmerksom",
+    short: "Vær til stede i øyeblikket og legg merke til det som skjer rundt deg.",
+    detail: "Det å være til stede i øyeblikket kan være en viktig kilde til livskvalitet. Bruk sansene og legg merke til omgivelsene – løvet som skifter farge, lyden av fuglekvitter, smaken av et saftig eple. Oppmerksomhet reduserer stress, gir større ro, bedrer konsentrasjon og øker glede og tilfredshet.",
+    color: "hsl(275, 55%, 62%)",
+  },
+  {
+    icon: Activity,
+    title: "Vær aktiv",
+    short: "Beveg deg, få opp pulsen og bruk kroppen – velg noe du liker.",
+    detail: "Fysisk aktivitet bedrer både psykisk og fysisk helse, og øker tilfredsheten med livet. Det kan styrke selvfølelsen, hjelpe med å takle stress og bidra til bedre søvn og hukommelse. Velg noe du liker – gå en tur, dans, svøm eller gjør yoga. Noen få minutter kan løfte humøret.",
+    color: "hsl(168, 55%, 48%)",
+  },
+  {
+    icon: BookOpen,
+    title: "Fortsett å lære",
+    short: "Utforsk nysgjerrigheten din og prøv noe nytt.",
+    detail: "Å fortsette å lære gir opplevelse av kompetanse og selvtillit, og øker tilfredsheten med livet. Prøv noe nytt, fordyp deg i en hobby, eller utforsk ukjent terreng. Bare det å oppleve variasjon i omgivelsene gjør oss gladere. Å gå helt opp i en oppgave gir opplevelse av glede og mening.",
+    color: "hsl(200, 65%, 55%)",
+  },
+  {
+    icon: Users,
+    title: "Knytt bånd",
+    short: "Plei relasjonene dine og skap nye forbindelser.",
+    detail: "Vi mennesker har grunnleggende behov for å høre til. Plei relasjonene du har og etabler nye. Både nære, gode relasjoner og løsere bånd med mennesker du møter i hverdagen er viktig. Gode relasjoner gir bedre psykisk og fysisk helse, og kan til og med bidra til et lengre liv.",
+    color: "hsl(45, 70%, 55%)",
+  },
+  {
+    icon: Heart,
+    title: "Gi",
+    short: "Bidra, del og vær sjenerøs – det gir glede til begge parter.",
+    detail: "Å hjelpe, støtte og bidra er ikke bare godt for den som mottar – det gjør også godt for den som gir. Engasjer deg i en forening, hjelp en venn, eller støtt noen som har det vanskelig. Å gi styrker båndene mellom mennesker og gir opplevelse av mening og glede.",
+    color: "hsl(340, 65%, 58%)",
+  },
+];
+
+function FiveTipCard({ tip, index }: { tip: typeof FIVE_TIPS[number]; index: number }) {
+  const [open, setOpen] = useState(false);
+  const Icon = tip.icon;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06 + 0.3, duration: 0.4 }}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full glass rounded-xl border border-border/30 hover:border-border/50 transition-all p-4 md:p-5 text-left group"
+      >
+        <div className="flex items-center gap-4">
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: `${tip.color}20`, color: tip.color }}
+          >
+            <Icon className="w-5 h-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-foreground text-sm md:text-base">{tip.title}</h3>
+            <p className="text-xs md:text-sm text-muted-foreground mt-0.5">{tip.short}</p>
+          </div>
+          <ChevronDown
+            className={`w-4 h-4 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${open ? "rotate-180" : ""}`}
+          />
+        </div>
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden"
+            >
+              <p className="text-sm text-muted-foreground leading-relaxed mt-4 pl-14 pr-2">
+                {tip.detail}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </button>
+    </motion.div>
+  );
+}
 
 const Index = () => {
   const { data: themes, isLoading } = useThemes();
@@ -91,6 +180,45 @@ const Index = () => {
               </div>
             </motion.div>
           )}
+
+          {/* Fem kunnskapsbaserte råd */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.28, duration: 0.5 }}
+            className="mb-16 max-w-3xl mx-auto"
+          >
+            <div className="flex items-center gap-4 mb-8">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border/60" />
+              <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Fem grep for hverdagsglede
+              </span>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border/60" />
+            </div>
+
+            <p className="text-center text-sm text-muted-foreground mb-6 max-w-xl mx-auto">
+              Kunnskapsbaserte aktiviteter alle kan gjøre for å fremme livskvalitet og helse, uavhengig av alder og livssituasjon.
+            </p>
+
+            <div className="space-y-3">
+              {FIVE_TIPS.map((tip, i) => (
+                <FiveTipCard key={i} tip={tip} index={i} />
+              ))}
+            </div>
+
+            <p className="text-xs text-muted-foreground/70 text-center mt-6">
+              Kilde:{" "}
+              <a
+                href="https://www.fhi.no/ps/livskvalitet-og-trivsel/hverdagsgledens-fem-kunnskapsbaserte-grep-for-god-livskvalitet/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-muted-foreground transition-colors inline-flex items-center gap-1"
+              >
+                Folkehelseinstituttet (FHI) – Hverdagsgleden
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </p>
+          </motion.div>
 
           {/* Section divider */}
           <motion.div
