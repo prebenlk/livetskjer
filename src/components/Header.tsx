@@ -7,7 +7,7 @@ export function Header() {
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-foreground font-semibold text-lg">
           <Leaf className="w-5 h-5 text-primary" />
-          Mestringsverktøy
+          Livetskjer.no
         </Link>
         <nav className="flex items-center gap-6 text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground transition-colors">Hjem</Link>
