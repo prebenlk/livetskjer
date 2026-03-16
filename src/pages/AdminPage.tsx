@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
-import { themes as initialThemes, videos as initialVideos, type Theme, type Video } from "@/data/themes";
+import { useThemes, useVideos, useCreateVideo, useDeleteVideo, useDeleteTheme } from "@/hooks/use-data";
+import { getIcon } from "@/lib/icons";
 import { Plus, Pencil, Trash2, Video as VideoIcon, LayoutGrid } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 type Tab = "themes" | "videos";
 
 const AdminPage = () => {
   const [tab, setTab] = useState<Tab>("themes");
-  const [themeList] = useState<Theme[]>(initialThemes);
-  const [videoList] = useState<Video[]>(initialVideos);
+  const { data: themes } = useThemes();
+  const { data: videos } = useVideos();
+  const createVideo = useCreateVideo();
+  const deleteVideo = useDeleteVideo();
+  const deleteTheme = useDeleteTheme();
   const [showAddVideo, setShowAddVideo] = useState(false);
-  const [newVideo, setNewVideo] = useState({ title: "", description: "", url: "", themeId: "", duration: "" });
+  const [newVideo, setNewVideo] = useState({ title: "", description: "", url: "", theme_id: "", duration: "" });
 
   const tabs: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
     { id: "themes", label: "Temaer", icon: LayoutGrid },
@@ -19,9 +24,18 @@ const AdminPage = () => {
   ];
 
   const handleAddVideo = () => {
-    // In the future, save to database
-    setShowAddVideo(false);
-    setNewVideo({ title: "", description: "", url: "", themeId: "", duration: "" });
+    if (!newVideo.title || !newVideo.url || !newVideo.theme_id) {
+      toast.error("Fyll inn alle påkrevde felt");
+      return;
+    }
+    createVideo.mutate(newVideo, {
+      onSuccess: () => {
+        toast.success("Video lagt til!");
+        setShowAddVideo(false);
+        setNewVideo({ title: "", description: "", url: "", theme_id: "", duration: "" });
+      },
+      onError: (e) => toast.error("Feil: " + e.message),
+    });
   };
 
   return (
@@ -53,8 +67,8 @@ const AdminPage = () => {
               <h2 className="font-medium text-foreground">Alle temaer</h2>
             </div>
             <div className="divide-y divide-border">
-              {themeList.map((theme) => {
-                const Icon = theme.icon;
+              {themes?.map((theme) => {
+                const Icon = getIcon(theme.icon);
                 return (
                   <div key={theme.id} className="flex items-center justify-between p-6">
                     <div className="flex items-center gap-4">
@@ -67,10 +81,17 @@ const AdminPage = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground">
-                        <Pencil className="w-4 h-4" />
-                      </button>
-                      <button className="p-2 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive">
+                      <button
+                        onClick={() => {
+                          if (confirm("Slette dette temaet og alle tilhørende videoer?")) {
+                            deleteTheme.mutate(theme.id, {
+                              onSuccess: () => toast.success("Tema slettet"),
+                              onError: (e) => toast.error(e.message),
+                            });
+                          }
+                        }}
+                        className="p-2 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -108,12 +129,12 @@ const AdminPage = () => {
                       className="rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                     />
                     <select
-                      value={newVideo.themeId}
-                      onChange={(e) => setNewVideo({ ...newVideo, themeId: e.target.value })}
+                      value={newVideo.theme_id}
+                      onChange={(e) => setNewVideo({ ...newVideo, theme_id: e.target.value })}
                       className="rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                     >
                       <option value="">Velg tema</option>
-                      {themeList.map((t) => (
+                      {themes?.map((t) => (
                         <option key={t.id} value={t.id}>{t.title}</option>
                       ))}
                     </select>
@@ -160,8 +181,8 @@ const AdminPage = () => {
               </div>
               <div className="divide-y divide-border">
                 <AnimatePresence>
-                  {videoList.map((video) => {
-                    const theme = themeList.find((t) => t.id === video.themeId);
+                  {videos?.map((video) => {
+                    const theme = themes?.find((t) => t.id === video.theme_id);
                     return (
                       <motion.div
                         key={video.id}
@@ -175,14 +196,19 @@ const AdminPage = () => {
                             {theme?.title} · <span className="tabular-nums">{video.duration}</span>
                           </p>
                         </div>
-                        <div className="flex gap-2">
-                          <button className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground">
-                            <Pencil className="w-4 h-4" />
-                          </button>
-                          <button className="p-2 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => {
+                            if (confirm("Slette denne videoen?")) {
+                              deleteVideo.mutate(video.id, {
+                                onSuccess: () => toast.success("Video slettet"),
+                                onError: (e) => toast.error(e.message),
+                              });
+                            }
+                          }}
+                          className="p-2 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </motion.div>
                     );
                   })}

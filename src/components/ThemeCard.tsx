@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { Theme } from "@/data/themes";
+import { getIcon } from "@/lib/icons";
+import type { Tables } from "@/integrations/supabase/types";
 
 interface ThemeCardProps {
-  theme: Theme;
+  theme: Tables<"themes"> & { videoCount: number };
 }
 
 export function ThemeCard({ theme }: ThemeCardProps) {
-  const Icon = theme.icon;
+  const Icon = getIcon(theme.icon);
 
   return (
     <Link to={`/tema/${theme.id}`}>

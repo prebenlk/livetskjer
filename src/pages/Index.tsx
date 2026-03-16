@@ -1,10 +1,12 @@
-import { themes } from "@/data/themes";
+import { useThemes } from "@/hooks/use-data";
 import { ThemeCard } from "@/components/ThemeCard";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
 import { motion } from "framer-motion";
 
 const Index = () => {
+  const { data: themes, isLoading } = useThemes();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -23,23 +25,31 @@ const Index = () => {
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {themes.map((theme, i) => (
-            <motion.div
-              key={theme.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * i + 0.3, duration: 0.4 }}
-            >
-              <ThemeCard theme={theme} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-card rounded-[20px] card-shadow border border-border/50 p-8 animate-pulse h-56" />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {themes?.map((theme, i) => (
+              <motion.div
+                key={theme.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * i + 0.3, duration: 0.4 }}
+              >
+                <ThemeCard theme={theme} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </main>
       <HelpButton />
     </div>

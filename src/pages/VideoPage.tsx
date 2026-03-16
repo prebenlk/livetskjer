@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { themes, videos } from "@/data/themes";
+import { useTheme, useVideo, useSubmitFeedback } from "@/hooks/use-data";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
 import { ArrowLeft, Frown, Meh, Smile } from "lucide-react";
@@ -14,17 +14,28 @@ const feedbackOptions = [
 
 const VideoPage = () => {
   const { themeId, videoId } = useParams();
-  const theme = themes.find((t) => t.id === themeId);
-  const video = videos.find((v) => v.id === videoId);
-  const [feedback, setFeedback] = useState<string | null>(null);
-  const [feedbackText, setFeedbackText] = useState("");
+  const { data: theme } = useTheme(themeId);
+  const { data: video, isLoading } = useVideo(videoId);
+  const submitFeedback = useSubmitFeedback();
   const [submitted, setSubmitted] = useState(false);
 
-  if (!theme || !video) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="max-w-5xl mx-auto px-6 py-16 text-center">
+        <div className="max-w-4xl mx-auto px-6 py-10 animate-pulse space-y-4">
+          <div className="h-6 w-48 bg-muted rounded" />
+          <div className="aspect-video bg-muted rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!video || !theme) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="max-w-4xl mx-auto px-6 py-16 text-center">
           <p className="text-muted-foreground">Video ikke funnet.</p>
         </div>
       </div>
@@ -32,9 +43,8 @@ const VideoPage = () => {
   }
 
   const handleFeedback = (value: string) => {
-    setFeedback(value);
+    submitFeedback.mutate({ video_id: video.id, rating: value });
     setSubmitted(true);
-    // In the future, this will save to the database
   };
 
   return (
@@ -58,12 +68,11 @@ const VideoPage = () => {
               src={video.url}
               title={video.title}
               className="w-full h-full"
-              allow="accelerometer; autoplay=0; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           </div>
 
-          {/* Feedback */}
           <div className="bg-card rounded-2xl card-shadow border border-border/50 p-8">
             <h3 className="font-medium text-foreground mb-4">
               {submitted ? "Takk for tilbakemeldingen! 🙏" : "Var denne videoen nyttig?"}
@@ -75,11 +84,7 @@ const VideoPage = () => {
                   <button
                     key={value}
                     onClick={() => handleFeedback(value)}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all hover:border-primary/30 hover:bg-primary/5 ${
-                      feedback === value
-                        ? "border-primary bg-primary/10"
-                        : "border-border"
-                    }`}
+                    className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border transition-all hover:border-primary/30 hover:bg-primary/5"
                   >
                     <Icon className="w-6 h-6 text-muted-foreground" />
                     <span className="text-xs text-muted-foreground">{label}</span>
