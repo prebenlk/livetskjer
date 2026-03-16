@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/use-auth";
+import { PageViewTracker } from "@/components/PageViewTracker";
 import Index from "./pages/Index.tsx";
 import ThemePage from "./pages/ThemePage.tsx";
 import VideoPage from "./pages/VideoPage.tsx";
@@ -20,6 +21,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <PageViewTracker />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/tema/:themeId" element={<ThemePage />} />
@@ -35,3 +37,4 @@ const App = () => (
 );
 
 export default App;
+
