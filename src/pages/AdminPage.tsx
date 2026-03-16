@@ -58,7 +58,16 @@ const AdminPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="max-w-5xl mx-auto px-6 py-10">
-        <h1 className="text-3xl font-semibold text-foreground mb-8">Adminpanel</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-semibold text-foreground">Adminpanel</h1>
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium hover:bg-accent transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            Logg ut
+          </button>
+        </div>
 
         <div className="flex gap-2 mb-8">
           {tabs.map(({ id, label, icon: Icon }) => (
