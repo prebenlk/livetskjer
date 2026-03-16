@@ -27,13 +27,9 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-16 max-w-2xl"
+            className="mb-16 text-center mx-auto max-w-3xl"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[hsl(var(--primary)/0.12)] text-[hsl(var(--primary))] text-sm font-medium mb-6">
-              <span className="w-2 h-2 rounded-full bg-[hsl(var(--primary))] animate-pulse" />
-              Helt anonymt
-            </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-5 leading-[1.1]">
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-6 leading-[1.1]">
               {heroTitle.includes("bedre hverdag") ? (
                 <>
                   {heroTitle.split("bedre hverdag")[0]}
@@ -45,7 +41,7 @@ const Index = () => {
                 heroTitle
               )}
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-[55ch] leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-[55ch] mx-auto leading-relaxed">
               {heroSubtitle}
             </p>
           </motion.div>
