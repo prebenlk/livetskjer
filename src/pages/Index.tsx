@@ -132,6 +132,45 @@ const Index = () => {
             </motion.div>
           )}
 
+          {/* Fem kunnskapsbaserte råd */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.28, duration: 0.5 }}
+            className="mb-16 max-w-3xl mx-auto"
+          >
+            <div className="flex items-center gap-4 mb-8">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border/60" />
+              <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Fem grep for hverdagsglede
+              </span>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border/60" />
+            </div>
+
+            <p className="text-center text-sm text-muted-foreground mb-6 max-w-xl mx-auto">
+              Kunnskapsbaserte aktiviteter alle kan gjøre for å fremme livskvalitet og helse, uavhengig av alder og livssituasjon.
+            </p>
+
+            <div className="space-y-3">
+              {FIVE_TIPS.map((tip, i) => (
+                <FiveTipCard key={i} tip={tip} index={i} />
+              ))}
+            </div>
+
+            <p className="text-xs text-muted-foreground/70 text-center mt-6">
+              Kilde:{" "}
+              <a
+                href="https://www.fhi.no/ps/livskvalitet-og-trivsel/hverdagsgledens-fem-kunnskapsbaserte-grep-for-god-livskvalitet/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-muted-foreground transition-colors inline-flex items-center gap-1"
+              >
+                Folkehelseinstituttet (FHI) – Hverdagsgleden
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </p>
+          </motion.div>
+
           {/* Section divider */}
           <motion.div
             initial={{ opacity: 0 }}
