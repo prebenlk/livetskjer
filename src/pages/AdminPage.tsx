@@ -48,11 +48,11 @@ function StatsTab({ themes, videos, feedback, pageViews }: {
   }, [feedback]);
 
   const feedbackByVideo = useMemo(() => {
-    const map: Record<string, { title: string; count: number; positive: number; neutral: number; negative: number }> = {};
+    const map: Record<string, { title: string; count: number; good: number; ok: number; bad: number }> = {};
     feedback?.forEach((f: any) => {
       if (!map[f.video_id]) {
         const video = videos?.find((v: any) => v.id === f.video_id);
-        map[f.video_id] = { title: video?.title ?? "Ukjent video", count: 0, positive: 0, neutral: 0, negative: 0 };
+        map[f.video_id] = { title: video?.title ?? "Ukjent video", count: 0, good: 0, ok: 0, bad: 0 };
       }
       map[f.video_id].count++;
       if (f.rating in map[f.video_id]) (map[f.video_id] as any)[f.rating]++;
