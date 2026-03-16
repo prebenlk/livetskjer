@@ -38,20 +38,20 @@ const Index = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-10 flex flex-col items-center"
+              className="mb-10 flex items-center justify-center gap-4 md:gap-6"
             >
               {/* Tree of Life icon */}
-              <div className="mb-4 relative">
-                <img src={treeOfLife} alt="Tree of Life" className="w-16 h-16 md:w-20 md:h-20 relative z-10" />
-                <div className="absolute inset-0 blur-2xl bg-[hsl(var(--primary)/0.25)] rounded-full scale-150" />
+              <div className="relative shrink-0">
+                <img src={treeOfLife} alt="Tree of Life" className="w-14 h-14 md:w-20 md:h-20 relative z-10" />
+                <div className="absolute inset-0 blur-2xl bg-[hsl(var(--primary)/0.2)] rounded-full scale-150" />
               </div>
-              <div className="flex flex-col items-center leading-none" style={{ fontFamily: "'Dancing Script', cursive" }}>
-                <span className="text-5xl md:text-7xl lg:text-8xl font-bold text-gradient bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(168,65%,60%)] to-[hsl(var(--theme-sleep))]">
+              <div className="leading-none" style={{ fontFamily: "'Great Vibes', cursive" }}>
+                <span className="text-5xl md:text-7xl lg:text-8xl text-gradient bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(168,65%,60%)] to-[hsl(var(--theme-sleep))]">
                   Livet skjer
                 </span>
               </div>
-              <div className="mt-4 h-px w-24 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
             </motion.div>
+            <div className="mb-10 h-px w-24 mx-auto bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground mb-8 leading-[1.08]">
               {heroTitle.includes("bedre hverdag") ? (
