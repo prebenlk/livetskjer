@@ -29,6 +29,7 @@ const App = () => (
             <Route path="/tema/:themeId/video/:videoId" element={<VideoPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/verktoy" element={<ToolsPage />} />
+            <Route path="/verktoy/:themeId" element={<ToolsPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
