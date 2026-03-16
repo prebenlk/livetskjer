@@ -11,6 +11,7 @@ import { toast } from "sonner";
 type Tab = "themes" | "videos";
 
 const AdminPage = () => {
+  const { user, loading, signOut } = useAuth();
   const [tab, setTab] = useState<Tab>("themes");
   const { data: themes } = useThemes();
   const { data: videos } = useVideos();
@@ -19,6 +20,19 @@ const AdminPage = () => {
   const deleteTheme = useDeleteTheme();
   const [showAddVideo, setShowAddVideo] = useState(false);
   const [newVideo, setNewVideo] = useState({ title: "", description: "", url: "", theme_id: "", duration: "" });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Laster...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
 
   const tabs: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
     { id: "themes", label: "Temaer", icon: LayoutGrid },
