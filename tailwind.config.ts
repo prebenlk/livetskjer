@@ -59,7 +59,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Instrument Sans', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'sans-serif'],
       },
       borderRadius: {
         '2xl': '1.25rem',

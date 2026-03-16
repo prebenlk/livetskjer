@@ -7,10 +7,12 @@ export function Header() {
   const isAdmin = user?.email === "preben-karlsen@hotmail.com";
 
   return (
-    <header className="w-full border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-40">
-      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-foreground font-semibold text-lg">
-          <Leaf className="w-5 h-5 text-primary" />
+    <header className="w-full border-b border-border/30 bg-background/60 backdrop-blur-xl sticky top-0 z-40">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2.5 text-foreground font-bold text-lg">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--theme-sleep))] flex items-center justify-center">
+            <Leaf className="w-4 h-4 text-[hsl(var(--primary-foreground))]" />
+          </div>
           Livetskjer.no
         </Link>
         <nav className="flex items-center gap-6 text-sm text-muted-foreground">
