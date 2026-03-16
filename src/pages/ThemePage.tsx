@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { themes, videos } from "@/data/themes";
+import { useTheme, useVideos } from "@/hooks/use-data";
+import { getIcon } from "@/lib/icons";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
 import { ArrowLeft, Play, Clock } from "lucide-react";
@@ -7,8 +8,23 @@ import { motion } from "framer-motion";
 
 const ThemePage = () => {
   const { themeId } = useParams();
-  const theme = themes.find((t) => t.id === themeId);
-  const themeVideos = videos.filter((v) => v.themeId === themeId);
+  const { data: theme, isLoading: themeLoading } = useTheme(themeId);
+  const { data: videos, isLoading: videosLoading } = useVideos(themeId);
+
+  if (themeLoading || videosLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 w-48 bg-muted rounded-lg" />
+            <div className="h-20 bg-muted rounded-2xl" />
+            <div className="h-20 bg-muted rounded-2xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!theme) {
     return (
@@ -21,7 +37,7 @@ const ThemePage = () => {
     );
   }
 
-  const Icon = theme.icon;
+  const Icon = getIcon(theme.icon);
 
   return (
     <div className="min-h-screen bg-background">
@@ -50,7 +66,7 @@ const ThemePage = () => {
         </motion.div>
 
         <div className="space-y-4">
-          {themeVideos.map((video, i) => (
+          {videos?.map((video, i) => (
             <motion.div
               key={video.id}
               initial={{ opacity: 0, y: 12 }}
