@@ -1,6 +1,37 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
+// ========== SITE SETTINGS ==========
+
+export function useSiteSettings() {
+  return useQuery({
+    queryKey: ["site_settings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("site_settings" as any)
+        .select("key, value");
+      if (error) throw error;
+      const settings: Record<string, string> = {};
+      (data as any[])?.forEach((row: any) => { settings[row.key] = row.value; });
+      return settings;
+    },
+  });
+}
+
+export function useUpdateSiteSetting() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ key, value }: { key: string; value: string }) => {
+      const { error } = await supabase
+        .from("site_settings" as any)
+        .update({ value, updated_at: new Date().toISOString() } as any)
+        .eq("key", key);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["site_settings"] }),
+  });
+}
+
 export function useThemes() {
   return useQuery({
     queryKey: ["themes"],
