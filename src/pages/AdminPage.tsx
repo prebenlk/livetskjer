@@ -186,6 +186,9 @@ const AdminPage = () => {
           ))}
         </div>
 
+        {/* ========== STATS TAB ========== */}
+        {tab === "stats" && <StatsTab themes={themes} videos={videos} feedback={feedback} pageViews={pageViews} />}
+
         {/* ========== THEMES TAB ========== */}
         {tab === "themes" && (
           <div>
