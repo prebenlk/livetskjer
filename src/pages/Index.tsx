@@ -53,7 +53,56 @@ const Index = () => {
   const heroSubtitle = settings?.hero_subtitle ?? "";
   const introText = settings?.intro_text ?? "";
 
+function FiveTipCard({ tip, index }: { tip: typeof FIVE_TIPS[number]; index: number }) {
+  const [open, setOpen] = useState(false);
+  const Icon = tip.icon;
+
   return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06 + 0.3, duration: 0.4 }}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full glass rounded-xl border border-border/30 hover:border-border/50 transition-all p-4 md:p-5 text-left group"
+      >
+        <div className="flex items-center gap-4">
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: `${tip.color}20`, color: tip.color }}
+          >
+            <Icon className="w-5 h-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-foreground text-sm md:text-base">{tip.title}</h3>
+            <p className="text-xs md:text-sm text-muted-foreground mt-0.5">{tip.short}</p>
+          </div>
+          <ChevronDown
+            className={`w-4 h-4 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${open ? "rotate-180" : ""}`}
+          />
+        </div>
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden"
+            >
+              <p className="text-sm text-muted-foreground leading-relaxed mt-4 pl-14 pr-2">
+                {tip.detail}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </button>
+    </motion.div>
+  );
+}
+
+const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
 
