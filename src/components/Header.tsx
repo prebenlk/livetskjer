@@ -32,7 +32,7 @@ export function Header() {
             to="/fem-grep"
             className="px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
           >
-            5 grep
+            5 råd for hverdagsglede
           </Link>
           {isAdmin ? (
             <Link
