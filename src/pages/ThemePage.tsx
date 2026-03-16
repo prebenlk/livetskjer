@@ -42,6 +42,7 @@ const ThemePage = () => {
     if (themeId) markThemeVisited(themeId);
   }, [themeId]);
 
+  if (themeLoading || videosLoading || resourcesLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
