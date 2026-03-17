@@ -274,82 +274,95 @@ const ThemePage = () => {
           </section>
         )}
 
-        {/* Resources */}
-        {resources && resources.length > 0 && (
-          <section>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="flex items-center gap-3 mb-8"
-            >
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: `${accent}15` }}
-              >
-                <BookOpen className="w-4 h-4" style={{ color: accent }} />
-              </div>
-              <h2 className="text-xl font-bold text-foreground">Anbefalte ressurser</h2>
-            </motion.div>
+        {/* Resources — grouped by type */}
+        {resources && resources.length > 0 && (() => {
+          const grouped = resources.reduce((acc: Record<string, any[]>, r: any) => {
+            const type = r.type || "other";
+            if (!acc[type]) acc[type] = [];
+            acc[type].push(r);
+            return acc;
+          }, {});
+          const typeOrder = ["book", "podcast", "article", "tool", "other"];
+          const sortedTypes = typeOrder.filter(t => grouped[t]);
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {resources.map((resource: any, i: number) => {
-                const typeLabel = RESOURCE_TYPE_LABELS[resource.type] ?? resource.type;
+          return (
+            <section className="space-y-12">
+              {sortedTypes.map((type, gi) => {
+                const config = RESOURCE_TYPE_CONFIG[type] || RESOURCE_TYPE_CONFIG.other;
+                const TypeIcon = config.icon;
+                const items = grouped[type];
+
                 return (
                   <motion.div
-                    key={resource.id}
-                    initial={{ opacity: 0, y: 12 }}
+                    key={type}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.06 + 0.35 }}
+                    transition={{ delay: gi * 0.1 + 0.3 }}
                   >
-                    <div className="bg-card rounded-2xl card-shadow border border-border/30 overflow-hidden hover:border-border/60 hover:card-shadow-hover transition-all duration-300 group h-full flex flex-col">
-                      {resource.image_url ? (
-                        <div className="aspect-[3/4] max-h-56 overflow-hidden bg-muted/30">
-                          <img
-                            src={resource.image_url}
-                            alt={resource.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-28 bg-muted/20 flex items-center justify-center">
-                          <Image className="w-8 h-8 text-muted-foreground/20" />
-                        </div>
-                      )}
-
-                      <div className="p-5 flex flex-col flex-1">
-                        <span
-                          className="self-start text-xs font-semibold rounded-full px-2.5 py-0.5 mb-3"
-                          style={{ backgroundColor: `${accent}12`, color: accent }}
-                        >
-                          {typeLabel}
-                        </span>
-                        <h3 className="font-bold text-foreground text-base mb-1.5">{resource.title}</h3>
-                        {resource.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-3 flex-1 leading-relaxed">
-                            {resource.description}
-                          </p>
-                        )}
-                        {resource.link && (
-                          <a
-                            href={resource.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2.5 transition-all"
-                            style={{ color: accent }}
-                          >
-                            Åpne ressurs
-                            <ChevronRight className="w-4 h-4" />
-                          </a>
-                        )}
+                    <div className="flex items-center gap-3 mb-6">
+                      <div
+                        className={`w-9 h-9 rounded-xl bg-gradient-to-br ${config.gradient} flex items-center justify-center shadow-lg`}
+                      >
+                        <TypeIcon className="w-4.5 h-4.5 text-white" />
                       </div>
+                      <h2 className="text-lg font-bold text-foreground">{config.label}</h2>
+                      <span className="text-xs text-muted-foreground font-medium ml-1">({items.length})</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {items.map((resource: any, i: number) => (
+                        <motion.div
+                          key={resource.id}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.04 + gi * 0.1 + 0.35 }}
+                        >
+                          <div className="bg-card rounded-xl card-shadow border border-border/30 overflow-hidden hover:border-border/60 hover:card-shadow-hover transition-all duration-300 group h-full flex flex-col">
+                            {resource.image_url ? (
+                              <div className="aspect-[3/4] max-h-48 overflow-hidden bg-muted/30">
+                                <img
+                                  src={resource.image_url}
+                                  alt={resource.title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                  loading="lazy"
+                                />
+                              </div>
+                            ) : (
+                              <div className={`h-20 bg-gradient-to-br ${config.gradient} opacity-20 flex items-center justify-center relative overflow-hidden`}>
+                                <TypeIcon className="w-10 h-10 text-foreground/10 absolute -right-2 -bottom-2 rotate-12 scale-150" />
+                              </div>
+                            )}
+
+                            <div className="p-4 flex flex-col flex-1">
+                              <h3 className="font-semibold text-foreground text-sm leading-snug mb-1">{resource.title}</h3>
+                              {resource.description && resource.description !== type && (
+                                <p className="text-xs text-muted-foreground line-clamp-2 flex-1 leading-relaxed">
+                                  {resource.description}
+                                </p>
+                              )}
+                              {resource.link && (
+                                <a
+                                  href={resource.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold hover:gap-2 transition-all"
+                                  style={{ color: accent }}
+                                >
+                                  Åpne
+                                  <ChevronRight className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
                     </div>
                   </motion.div>
                 );
               })}
-            </div>
-          </section>
+            </section>
+          );
+        })()}
         )}
 
         {/* Empty state */}
