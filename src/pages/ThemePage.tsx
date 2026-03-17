@@ -363,7 +363,6 @@ const ThemePage = () => {
             </section>
           );
         })()}
-        )}
 
         {/* Empty state */}
         {(!videos || videos.length === 0) && (!resources || resources.length === 0) && (
