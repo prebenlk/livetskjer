@@ -4,7 +4,7 @@ import { useTheme, useVideos, useThemeResources } from "@/hooks/use-data";
 import { getIcon } from "@/lib/icons";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
-import { ArrowLeft, Play, Clock, BookOpen, ExternalLink, Image, ChevronRight } from "lucide-react";
+import { ArrowLeft, Play, Clock, BookOpen, ExternalLink, ChevronRight, Book, Headphones, Globe, Smartphone, Instagram, Mic } from "lucide-react";
 import { motion } from "framer-motion";
 import { markThemeVisited } from "@/pages/ToolsPage";
 
