@@ -167,30 +167,87 @@ const ThemePage = () => {
       </div>
 
       <main className="max-w-5xl mx-auto px-6 py-10 md:py-14">
-        {/* Intro text with styled paragraphs */}
-        {theme.intro_text && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.5 }}
-            className="mb-14"
-          >
-            <div className="relative glass rounded-2xl border border-border/30 p-8 md:p-10 overflow-hidden">
-              {/* Accent line on left */}
-              <div
-                className="absolute left-0 top-6 bottom-6 w-1 rounded-full"
-                style={{ backgroundColor: accent }}
-              />
-              <div className="pl-5 space-y-4">
-                {theme.intro_text.split("\n\n").map((paragraph: string, i: number) => (
-                  <p key={i} className="text-foreground/85 leading-relaxed text-base">
-                    {paragraph}
-                  </p>
-                ))}
+        {/* Intro text with structured sections */}
+        {theme.intro_text && (() => {
+          // Parse sections: split by ## headings
+          const sections = theme.intro_text.split(/^## /m).filter(Boolean);
+          const hasSections = theme.intro_text.includes("## ");
+
+          if (hasSections) {
+            return (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.5 }}
+                className="mb-14"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {sections.map((section: string, i: number) => {
+                    const lines = section.trim().split("\n");
+                    const heading = lines[0].trim();
+                    const bullets = lines.slice(1).filter((l: string) => l.trim().startsWith("-")).map((l: string) => l.trim().replace(/^-\s*/, ""));
+                    const paragraphs = lines.slice(1).filter((l: string) => l.trim() && !l.trim().startsWith("-"));
+
+                    return (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.08 + 0.2 }}
+                        className="glass rounded-2xl border border-border/30 p-6 relative overflow-hidden"
+                      >
+                        <div
+                          className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl"
+                          style={{ backgroundColor: accent }}
+                        />
+                        <h3 className="font-bold text-foreground text-base mb-4">{heading}</h3>
+                        {bullets.length > 0 && (
+                          <ul className="space-y-2">
+                            {bullets.map((bullet: string, j: number) => (
+                              <li key={j} className="flex items-start gap-2.5 text-sm text-foreground/80 leading-relaxed">
+                                <span
+                                  className="w-1.5 h-1.5 rounded-full mt-2 shrink-0"
+                                  style={{ backgroundColor: accent }}
+                                />
+                                {bullet}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        {paragraphs.map((p: string, j: number) => (
+                          <p key={j} className="text-sm text-foreground/80 leading-relaxed mt-2">{p.trim()}</p>
+                        ))}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.section>
+            );
+          }
+
+          return (
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.5 }}
+              className="mb-14"
+            >
+              <div className="relative glass rounded-2xl border border-border/30 p-8 md:p-10 overflow-hidden">
+                <div
+                  className="absolute left-0 top-6 bottom-6 w-1 rounded-full"
+                  style={{ backgroundColor: accent }}
+                />
+                <div className="pl-5 space-y-4">
+                  {theme.intro_text.split("\n\n").map((paragraph: string, i: number) => (
+                    <p key={i} className="text-foreground/85 leading-relaxed text-base">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.section>
-        )}
+            </motion.section>
+          );
+        })()}
 
         {/* Videos — card grid with thumbnails */}
         {videos && videos.length > 0 && (
