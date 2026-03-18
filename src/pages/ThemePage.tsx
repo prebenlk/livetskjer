@@ -22,7 +22,8 @@ const THEME_COLORS = [
 const RESOURCE_TYPE_CONFIG: Record<string, { label: string; icon: any; gradient: string; bg: string }> = {
   book: { label: "Bøker & Lydbøker", icon: Book, gradient: "from-amber-500/80 to-orange-600/80", bg: "amber" },
   podcast: { label: "Podcaster", icon: Mic, gradient: "from-violet-500/80 to-purple-600/80", bg: "violet" },
-  article: { label: "Nettsider & Instagram", icon: Globe, gradient: "from-sky-500/80 to-blue-600/80", bg: "sky" },
+  article: { label: "Nettsider", icon: Globe, gradient: "from-sky-500/80 to-blue-600/80", bg: "sky" },
+  instagram: { label: "Instagram", icon: Instagram, gradient: "from-pink-500/80 to-rose-600/80", bg: "pink" },
   tool: { label: "Apper", icon: Smartphone, gradient: "from-emerald-500/80 to-teal-600/80", bg: "emerald" },
   other: { label: "Annet", icon: BookOpen, gradient: "from-slate-500/80 to-gray-600/80", bg: "slate" },
 };
