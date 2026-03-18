@@ -209,14 +209,28 @@ const ToolsPage = () => {
                       <h4 className="font-semibold text-foreground">{tool.title}</h4>
                     </div>
                     <p className="text-sm text-muted-foreground mb-4 pl-8">{tool.description}</p>
-                    <button
-                      onClick={() => setOpenFormToolId(tool.id)}
-                      className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline pl-8 cursor-pointer bg-transparent border-none"
-                      style={{ color: selectedCategory.color.accent }}
-                    >
-                      <PenLine className="w-3.5 h-3.5" />
-                      Åpne og fyll ut
-                    </button>
+                    {tool.link ? (
+                      <a
+                        href={tool.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                        className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline pl-8"
+                        style={{ color: selectedCategory.color.accent }}
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Last ned
+                      </a>
+                    ) : (
+                      <button
+                        onClick={() => setOpenFormToolId(tool.id)}
+                        className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline pl-8 cursor-pointer bg-transparent border-none"
+                        style={{ color: selectedCategory.color.accent }}
+                      >
+                        <PenLine className="w-3.5 h-3.5" />
+                        Åpne og fyll ut
+                      </button>
+                    )}
                   </motion.div>
                 ))}
               </div>
