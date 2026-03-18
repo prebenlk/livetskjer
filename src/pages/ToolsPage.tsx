@@ -36,7 +36,11 @@ const ToolsPage = () => {
   const { data: themes } = useThemes();
   const { data: allResources } = useAllThemeResources();
 
+  // Exclude "Litteratur om selvhjelp" from tools page (resources shown on its own theme page)
+  const EXCLUDED_THEME_TITLES = ["litteratur om selvhjelp"];
+
   const themesWithTools = (themes ?? [])
+    .filter((theme) => !EXCLUDED_THEME_TITLES.includes(theme.title.toLowerCase()))
     .map((theme, idx) => ({
       theme,
       tools: (allResources ?? []).filter((r: any) => r.theme_id === theme.id && r.type === "tool"),
