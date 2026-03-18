@@ -340,7 +340,7 @@ const ThemePage = () => {
             acc[type].push(r);
             return acc;
           }, {});
-          const typeOrder = ["book", "podcast", "article", "tool", "other"];
+          const typeOrder = ["book", "tool", "podcast", "instagram", "article", "other"];
           const sortedTypes = typeOrder.filter(t => grouped[t]);
 
           return (
