@@ -9,13 +9,17 @@ import {
   useSiteSettings, useUpdateSiteSetting,
   useFeedback, usePageViews,
   useAllThemeResources, useCreateThemeResource, useUpdateThemeResource, useDeleteThemeResource, useUploadResourceImage,
+  useSwapThemeOrder, useSwapVideoOrder, useSwapResourceOrder,
 } from "@/hooks/use-data";
 import { getIcon, iconMap } from "@/lib/icons";
-import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check, Settings, BarChart3, Frown, Meh, Smile, Eye, MessageSquare, TrendingUp, ChevronDown, ChevronRight, BookOpen, Image, ExternalLink, Upload } from "lucide-react";
+import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check, Settings, BarChart3, Frown, Meh, Smile, Eye, MessageSquare, TrendingUp, ChevronDown, ChevronRight, BookOpen, Image, ExternalLink, Upload, Navigation, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { SortButtons } from "@/components/admin/SortButtons";
+import { NavigationEditor } from "@/components/admin/NavigationEditor";
+import { FiveTipsEditor } from "@/components/admin/FiveTipsEditor";
 
-type Tab = "themes" | "settings" | "stats";
+type Tab = "themes" | "settings" | "stats" | "navigation" | "five_tips";
 
 const ADMIN_EMAIL = "preben-karlsen@hotmail.com";
 const ICON_OPTIONS = Object.keys(iconMap);
