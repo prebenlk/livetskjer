@@ -180,6 +180,8 @@ function StatsTab({ themes, videos, feedback, pageViews }: {
 // ========== THEME DETAIL COMPONENT ==========
 function ThemeDetail({
   theme,
+  themeIndex,
+  totalThemes,
   videos,
   themes,
   resources,
@@ -192,8 +194,13 @@ function ThemeDetail({
   onUpdateResource,
   onDeleteResource,
   onUploadImage,
+  onSwapThemeOrder,
+  onSwapVideoOrder,
+  onSwapResourceOrder,
 }: {
   theme: any;
+  themeIndex: number;
+  totalThemes: number;
   videos: any[];
   themes: any[];
   resources: any[];
@@ -206,6 +213,9 @@ function ThemeDetail({
   onUpdateResource: any;
   onDeleteResource: any;
   onUploadImage: any;
+  onSwapThemeOrder: any;
+  onSwapVideoOrder: any;
+  onSwapResourceOrder: any;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingTheme, setIsEditingTheme] = useState(false);
