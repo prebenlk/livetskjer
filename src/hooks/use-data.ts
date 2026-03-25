@@ -292,3 +292,49 @@ export function useUploadResourceImage() {
     },
   });
 }
+
+// ========== SORT ORDER ==========
+
+export function useSwapThemeOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id1, order1, id2, order2 }: { id1: string; order1: number; id2: string; order2: number }) => {
+      await supabase.from("themes").update({ sort_order: order2 }).eq("id", id1);
+      await supabase.from("themes").update({ sort_order: order1 }).eq("id", id2);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["themes"] }),
+  });
+}
+
+export function useSwapVideoOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id1, order1, id2, order2 }: { id1: string; order1: number; id2: string; order2: number }) => {
+      await supabase.from("videos").update({ sort_order: order2 }).eq("id", id1);
+      await supabase.from("videos").update({ sort_order: order1 }).eq("id", id2);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["videos"] }),
+  });
+}
+
+export function useSwapResourceOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id1, order1, id2, order2 }: { id1: string; order1: number; id2: string; order2: number }) => {
+      await supabase.from("theme_resources" as any).update({ sort_order: order2 } as any).eq("id", id1);
+      await supabase.from("theme_resources" as any).update({ sort_order: order1 } as any).eq("id", id2);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["theme_resources"] }),
+  });
+}
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const ext = file.name.split('.').pop();
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("resource-images").upload(path, file);
+      if (error) throw error;
+      const { data } = supabase.storage.from("resource-images").getPublicUrl(path);
+      return data.publicUrl;
+    },
+  });
+}
