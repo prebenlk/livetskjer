@@ -910,10 +910,12 @@ const AdminPage = () => {
               )}
             </AnimatePresence>
 
-            {themes?.map((theme) => (
+            {themes?.map((theme, i) => (
               <ThemeDetail
                 key={theme.id}
                 theme={theme}
+                themeIndex={i}
+                totalThemes={themes.length}
                 videos={videos ?? []}
                 themes={themes}
                 resources={allResources ?? []}
@@ -926,6 +928,9 @@ const AdminPage = () => {
                 onUpdateResource={updateResource}
                 onDeleteResource={deleteResource}
                 onUploadImage={uploadImage}
+                onSwapThemeOrder={swapThemeOrder}
+                onSwapVideoOrder={swapVideoOrder}
+                onSwapResourceOrder={swapResourceOrder}
               />
             ))}
           </div>
