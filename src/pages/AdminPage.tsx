@@ -770,6 +770,9 @@ const AdminPage = () => {
   const updateResource = useUpdateThemeResource();
   const deleteResource = useDeleteThemeResource();
   const uploadImage = useUploadResourceImage();
+  const swapThemeOrder = useSwapThemeOrder();
+  const swapVideoOrder = useSwapVideoOrder();
+  const swapResourceOrder = useSwapResourceOrder();
   const { data: siteSettings } = useSiteSettings();
   const updateSetting = useUpdateSiteSetting();
   const { data: feedback } = useFeedback();
