@@ -325,28 +325,77 @@ function ThemeDetail({
     });
   };
 
+  const swapThemeWithNeighbor = (direction: -1 | 1) => {
+    const sorted = themes.filter(t => true).sort((a: any, b: any) => a.sort_order - b.sort_order);
+    const idx = sorted.findIndex((t: any) => t.id === theme.id);
+    const target = idx + direction;
+    if (target < 0 || target >= sorted.length) return;
+    onSwapThemeOrder.mutate({
+      id1: theme.id, order1: theme.sort_order,
+      id2: sorted[target].id, order2: sorted[target].sort_order,
+    });
+  };
+
+  const swapVideoWithNeighbor = (video: any, direction: -1 | 1) => {
+    const sorted = themeVideos.sort((a: any, b: any) => a.sort_order - b.sort_order);
+    const idx = sorted.findIndex((v: any) => v.id === video.id);
+    const target = idx + direction;
+    if (target < 0 || target >= sorted.length) return;
+    onSwapVideoOrder.mutate({
+      id1: video.id, order1: video.sort_order,
+      id2: sorted[target].id, order2: sorted[target].sort_order,
+    });
+  };
+
+  const swapResourceWithNeighbor = (resource: any, direction: -1 | 1) => {
+    const sorted = themeResources.sort((a: any, b: any) => a.sort_order - b.sort_order);
+    const idx = sorted.findIndex((r: any) => r.id === resource.id);
+    const target = idx + direction;
+    if (target < 0 || target >= sorted.length) return;
+    onSwapResourceOrder.mutate({
+      id1: resource.id, order1: resource.sort_order,
+      id2: sorted[target].id, order2: sorted[target].sort_order,
+    });
+  };
+
   return (
     <div className="bg-card rounded-2xl card-shadow border border-border/50 overflow-hidden">
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-6 flex items-center justify-between hover:bg-muted/30 transition-colors"
-      >
-        <div className="flex items-center gap-4">
-          <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-            <Icon className="text-primary w-5 h-5" />
-          </div>
-          <div className="text-left">
-            <p className="font-semibold text-foreground text-base">{theme.title}</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              {theme.description.slice(0, 80)}{theme.description.length > 80 ? '…' : ''}
-            </p>
-          </div>
+      <div className="w-full p-6 flex items-center justify-between hover:bg-muted/30 transition-colors">
+        <div className="flex items-center gap-3">
+          <SortButtons
+            onMoveUp={() => swapThemeWithNeighbor(-1)}
+            onMoveDown={() => swapThemeWithNeighbor(1)}
+            isFirst={themeIndex === 0}
+            isLast={themeIndex === totalThemes - 1}
+          />
+          <button onClick={() => setIsExpanded(!isExpanded)} className="flex items-center gap-4 text-left">
+            <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <Icon className="text-primary w-5 h-5" />
+            </div>
+            <div>
+              <p className="font-semibold text-foreground text-base">{theme.title}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {theme.description.slice(0, 80)}{theme.description.length > 80 ? '…' : ''}
+              </p>
+            </div>
+          </button>
         </div>
         <div className="flex items-center gap-3 shrink-0">
+          <Link
+            to={`/tema/${theme.id}`}
+            className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+            title="Se temaside"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Eye className="w-4 h-4" />
+          </Link>
           <span className="text-xs font-medium text-muted-foreground bg-muted rounded-full px-3 py-1">
             {themeVideos.length} videoer · {themeResources.length} ressurser
           </span>
-          {isExpanded ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
+          <button onClick={() => setIsExpanded(!isExpanded)}>
+            {isExpanded ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
+          </button>
+        </div>
         </div>
       </button>
 
