@@ -993,6 +993,12 @@ const AdminPage = () => {
             </div>
           </div>
         )}
+
+        {/* ========== NAVIGATION TAB ========== */}
+        {tab === "navigation" && <NavigationEditor />}
+
+        {/* ========== FIVE TIPS TAB ========== */}
+        {tab === "five_tips" && <FiveTipsEditor />}
       </div>
     </div>
   );
