@@ -327,14 +327,3 @@ export function useSwapResourceOrder() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["theme_resources"] }),
   });
 }
-  return useMutation({
-    mutationFn: async (file: File) => {
-      const ext = file.name.split('.').pop();
-      const path = `${crypto.randomUUID()}.${ext}`;
-      const { error } = await supabase.storage.from("resource-images").upload(path, file);
-      if (error) throw error;
-      const { data } = supabase.storage.from("resource-images").getPublicUrl(path);
-      return data.publicUrl;
-    },
-  });
-}
