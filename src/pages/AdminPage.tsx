@@ -537,6 +537,12 @@ function ThemeDetail({
                           ) : (
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
+                                <SortButtons
+                                  onMoveUp={() => swapVideoWithNeighbor(video, -1)}
+                                  onMoveDown={() => swapVideoWithNeighbor(video, 1)}
+                                  isFirst={themeVideos.indexOf(video) === 0}
+                                  isLast={themeVideos.indexOf(video) === themeVideos.length - 1}
+                                />
                                 <VideoIcon className="w-4 h-4 text-muted-foreground shrink-0" />
                                 <div>
                                   <p className="font-medium text-foreground text-sm">{video.title}</p>
@@ -544,6 +550,9 @@ function ThemeDetail({
                                 </div>
                               </div>
                               <div className="flex gap-1">
+                                <Link to={`/tema/${theme.id}/video/${video.id}`} className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground" title="Se video">
+                                  <Eye className="w-3.5 h-3.5" />
+                                </Link>
                                 <button onClick={() => startEditVideo(video)} className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground" title="Rediger">
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
