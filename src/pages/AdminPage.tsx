@@ -811,6 +811,8 @@ const AdminPage = () => {
   const tabs: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
     { id: "stats", label: "Statistikk", icon: BarChart3 },
     { id: "themes", label: "Temaer & Videoer", icon: LayoutGrid },
+    { id: "navigation", label: "Navigasjon", icon: Navigation },
+    { id: "five_tips", label: "5 Råd", icon: Sparkles },
     { id: "settings", label: "Innstillinger", icon: Settings },
   ];
 
