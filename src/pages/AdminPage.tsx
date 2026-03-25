@@ -721,7 +721,6 @@ function ThemeDetail({
                                 <button onClick={() => startEditResource(resource)} className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground" title="Rediger">
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
-                                </button>
                                 <button
                                   onClick={() => {
                                     if (confirm("Slette denne ressursen?")) {
