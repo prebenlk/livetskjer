@@ -699,6 +699,12 @@ function ThemeDetail({
                                   <Image className="w-5 h-5 text-muted-foreground" />
                                 </div>
                               )}
+                              <SortButtons
+                                onMoveUp={() => swapResourceWithNeighbor(resource, -1)}
+                                onMoveDown={() => swapResourceWithNeighbor(resource, 1)}
+                                isFirst={themeResources.indexOf(resource) === 0}
+                                isLast={themeResources.indexOf(resource) === themeResources.length - 1}
+                              />
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                   <p className="font-medium text-foreground text-sm truncate">{resource.title}</p>
@@ -714,6 +720,7 @@ function ThemeDetail({
                               <div className="flex gap-1 shrink-0">
                                 <button onClick={() => startEditResource(resource)} className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground" title="Rediger">
                                   <Pencil className="w-3.5 h-3.5" />
+                                </button>
                                 </button>
                                 <button
                                   onClick={() => {
