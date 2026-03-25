@@ -1,50 +1,34 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
 import { HelpButton } from "@/components/HelpButton";
+import { useSiteSettings } from "@/hooks/use-data";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, Activity, BookOpen, Users, Heart, ChevronDown, ExternalLink, Sparkles } from "lucide-react";
+import { Eye, Activity, BookOpen, Users, Heart, ChevronDown, ExternalLink, Sparkles, Star, Sun, Zap, Shield } from "lucide-react";
 
-const FIVE_TIPS = [
-  {
-    icon: Eye,
-    title: "Vær oppmerksom",
-    short: "Vær til stede i øyeblikket og legg merke til det som skjer rundt deg.",
-    detail: "Det å være til stede i øyeblikket kan være en viktig kilde til livskvalitet. Bruk sansene og legg merke til omgivelsene – løvet som skifter farge, lyden av fuglekvitter, smaken av et saftig eple. Oppmerksomhet reduserer stress, gir større ro, bedrer konsentrasjon og øker glede og tilfredshet.",
-    color: "hsl(275, 55%, 62%)",
-  },
-  {
-    icon: Activity,
-    title: "Vær aktiv",
-    short: "Beveg deg, få opp pulsen og bruk kroppen – velg noe du liker.",
-    detail: "Fysisk aktivitet bedrer både psykisk og fysisk helse, og øker tilfredsheten med livet. Det kan styrke selvfølelsen, hjelpe med å takle stress og bidra til bedre søvn og hukommelse. Velg noe du liker – gå en tur, dans, svøm eller gjør yoga. Noen få minutter kan løfte humøret.",
-    color: "hsl(168, 55%, 48%)",
-  },
-  {
-    icon: BookOpen,
-    title: "Fortsett å lære",
-    short: "Utforsk nysgjerrigheten din og prøv noe nytt.",
-    detail: "Å fortsette å lære gir opplevelse av kompetanse og selvtillit, og øker tilfredsheten med livet. Prøv noe nytt, fordyp deg i en hobby, eller utforsk ukjent terreng. Bare det å oppleve variasjon i omgivelsene gjør oss gladere. Å gå helt opp i en oppgave gir opplevelse av glede og mening.",
-    color: "hsl(200, 65%, 55%)",
-  },
-  {
-    icon: Users,
-    title: "Knytt bånd",
-    short: "Plei relasjonene dine og skap nye forbindelser.",
-    detail: "Vi mennesker har grunnleggende behov for å høre til. Plei relasjonene du har og etabler nye. Både nære, gode relasjoner og løsere bånd med mennesker du møter i hverdagen er viktig. Gode relasjoner gir bedre psykisk og fysisk helse, og kan til og med bidra til et lengre liv.",
-    color: "hsl(45, 70%, 55%)",
-  },
-  {
-    icon: Heart,
-    title: "Gi",
-    short: "Bidra, del og vær sjenerøs – det gir glede til begge parter.",
-    detail: "Å hjelpe, støtte og bidra er ikke bare godt for den som mottar – det gjør også godt for den som gir. Engasjer deg i en forening, hjelp en venn, eller støtt noen som har det vanskelig. Å gi styrker båndene mellom mennesker og gir opplevelse av mening og glede.",
-    color: "hsl(340, 65%, 58%)",
-  },
+const ICON_MAP: Record<string, any> = {
+  eye: Eye, activity: Activity, "book-open": BookOpen, users: Users, heart: Heart,
+  sparkles: Sparkles, star: Star, sun: Sun, zap: Zap, shield: Shield,
+};
+
+const DEFAULT_TIPS = [
+  { title: "Vær oppmerksom", short: "Vær til stede i øyeblikket og legg merke til det som skjer rundt deg.", detail: "Det å være til stede i øyeblikket kan være en viktig kilde til livskvalitet. Bruk sansene og legg merke til omgivelsene – løvet som skifter farge, lyden av fuglekvitter, smaken av et saftig eple. Oppmerksomhet reduserer stress, gir større ro, bedrer konsentrasjon og øker glede og tilfredshet.", icon: "eye", color: "hsl(275, 55%, 62%)" },
+  { title: "Vær aktiv", short: "Beveg deg, få opp pulsen og bruk kroppen – velg noe du liker.", detail: "Fysisk aktivitet bedrer både psykisk og fysisk helse, og øker tilfredsheten med livet. Det kan styrke selvfølelsen, hjelpe med å takle stress og bidra til bedre søvn og hukommelse. Velg noe du liker – gå en tur, dans, svøm eller gjør yoga. Noen få minutter kan løfte humøret.", icon: "activity", color: "hsl(168, 55%, 48%)" },
+  { title: "Fortsett å lære", short: "Utforsk nysgjerrigheten din og prøv noe nytt.", detail: "Å fortsette å lære gir opplevelse av kompetanse og selvtillit, og øker tilfredsheten med livet. Prøv noe nytt, fordyp deg i en hobby, eller utforsk ukjent terreng. Bare det å oppleve variasjon i omgivelsene gjør oss gladere. Å gå helt opp i en oppgave gir opplevelse av glede og mening.", icon: "book-open", color: "hsl(200, 65%, 55%)" },
+  { title: "Knytt bånd", short: "Plei relasjonene dine og skap nye forbindelser.", detail: "Vi mennesker har grunnleggende behov for å høre til. Plei relasjonene du har og etabler nye. Både nære, gode relasjoner og løsere bånd med mennesker du møter i hverdagen er viktig. Gode relasjoner gir bedre psykisk og fysisk helse, og kan til og med bidra til et lengre liv.", icon: "users", color: "hsl(45, 70%, 55%)" },
+  { title: "Gi", short: "Bidra, del og vær sjenerøs – det gir glede til begge parter.", detail: "Å hjelpe, støtte og bidra er ikke bare godt for den som mottar – det gjør også godt for den som gir. Engasjer deg i en forening, hjelp en venn, eller støtt noen som har det vanskelig. Å gi styrker båndene mellom mennesker og gir opplevelse av mening og glede.", icon: "heart", color: "hsl(340, 65%, 58%)" },
 ];
 
-function TipCard({ tip, index }: { tip: typeof FIVE_TIPS[number]; index: number }) {
+interface Tip {
+  title: string;
+  short: string;
+  detail: string;
+  icon: string;
+  color: string;
+}
+
+function TipCard({ tip, index }: { tip: Tip; index: number }) {
   const [open, setOpen] = useState(false);
-  const Icon = tip.icon;
+  const Icon = ICON_MAP[tip.icon] || Eye;
 
   return (
     <motion.div
@@ -92,6 +76,13 @@ function TipCard({ tip, index }: { tip: typeof FIVE_TIPS[number]; index: number 
 }
 
 const FiveGrepPage = () => {
+  const { data: settings } = useSiteSettings();
+
+  let tips: Tip[] = DEFAULT_TIPS;
+  if (settings?.five_tips) {
+    try { tips = JSON.parse(settings.five_tips); } catch { /* ignore */ }
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -121,7 +112,7 @@ const FiveGrepPage = () => {
           </motion.div>
 
           <div className="space-y-3">
-            {FIVE_TIPS.map((tip, i) => (
+            {tips.map((tip, i) => (
               <TipCard key={i} tip={tip} index={i} />
             ))}
           </div>

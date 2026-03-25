@@ -1,10 +1,28 @@
 import { Link } from "react-router-dom";
 import { Leaf } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useSiteSettings } from "@/hooks/use-data";
+
+interface NavItem {
+  label: string;
+  path: string;
+}
+
+const DEFAULT_NAV: NavItem[] = [
+  { label: "Hjem", path: "/" },
+  { label: "Verktøy", path: "/verktoy" },
+  { label: "5 råd for hverdagsglede", path: "/fem-grep" },
+];
 
 export function Header() {
   const { user } = useAuth();
+  const { data: settings } = useSiteSettings();
   const isAdmin = user?.email === "preben-karlsen@hotmail.com";
+
+  let navItems = DEFAULT_NAV;
+  if (settings?.nav_items) {
+    try { navItems = JSON.parse(settings.nav_items); } catch { /* ignore */ }
+  }
 
   return (
     <header className="w-full border-b border-border/20 glass-strong sticky top-0 z-40">
@@ -16,24 +34,15 @@ export function Header() {
           <span className="tracking-tight">Nårlivetskjer.no</span>
         </Link>
         <nav className="flex items-center gap-1 text-sm">
-          <Link
-            to="/"
-            className="px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
-          >
-            Hjem
-          </Link>
-          <Link
-            to="/verktoy"
-            className="px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
-          >
-            Verktøy
-          </Link>
-          <Link
-            to="/fem-grep"
-            className="px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
-          >
-            5 råd for hverdagsglede
-          </Link>
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="px-4 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+            >
+              {item.label}
+            </Link>
+          ))}
           {isAdmin ? (
             <Link
               to="/admin"

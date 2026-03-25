@@ -9,13 +9,17 @@ import {
   useSiteSettings, useUpdateSiteSetting,
   useFeedback, usePageViews,
   useAllThemeResources, useCreateThemeResource, useUpdateThemeResource, useDeleteThemeResource, useUploadResourceImage,
+  useSwapThemeOrder, useSwapVideoOrder, useSwapResourceOrder,
 } from "@/hooks/use-data";
 import { getIcon, iconMap } from "@/lib/icons";
-import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check, Settings, BarChart3, Frown, Meh, Smile, Eye, MessageSquare, TrendingUp, ChevronDown, ChevronRight, BookOpen, Image, ExternalLink, Upload } from "lucide-react";
+import { Plus, Trash2, Video as VideoIcon, LayoutGrid, LogOut, Pencil, X, Check, Settings, BarChart3, Frown, Meh, Smile, Eye, MessageSquare, TrendingUp, ChevronDown, ChevronRight, BookOpen, Image, ExternalLink, Upload, Navigation, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { SortButtons } from "@/components/admin/SortButtons";
+import { NavigationEditor } from "@/components/admin/NavigationEditor";
+import { FiveTipsEditor } from "@/components/admin/FiveTipsEditor";
 
-type Tab = "themes" | "settings" | "stats";
+type Tab = "themes" | "settings" | "stats" | "navigation" | "five_tips";
 
 const ADMIN_EMAIL = "preben-karlsen@hotmail.com";
 const ICON_OPTIONS = Object.keys(iconMap);
@@ -176,6 +180,8 @@ function StatsTab({ themes, videos, feedback, pageViews }: {
 // ========== THEME DETAIL COMPONENT ==========
 function ThemeDetail({
   theme,
+  themeIndex,
+  totalThemes,
   videos,
   themes,
   resources,
@@ -188,8 +194,13 @@ function ThemeDetail({
   onUpdateResource,
   onDeleteResource,
   onUploadImage,
+  onSwapThemeOrder,
+  onSwapVideoOrder,
+  onSwapResourceOrder,
 }: {
   theme: any;
+  themeIndex: number;
+  totalThemes: number;
   videos: any[];
   themes: any[];
   resources: any[];
@@ -202,6 +213,9 @@ function ThemeDetail({
   onUpdateResource: any;
   onDeleteResource: any;
   onUploadImage: any;
+  onSwapThemeOrder: any;
+  onSwapVideoOrder: any;
+  onSwapResourceOrder: any;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingTheme, setIsEditingTheme] = useState(false);
@@ -311,30 +325,78 @@ function ThemeDetail({
     });
   };
 
+  const swapThemeWithNeighbor = (direction: -1 | 1) => {
+    const sorted = themes.filter(t => true).sort((a: any, b: any) => a.sort_order - b.sort_order);
+    const idx = sorted.findIndex((t: any) => t.id === theme.id);
+    const target = idx + direction;
+    if (target < 0 || target >= sorted.length) return;
+    onSwapThemeOrder.mutate({
+      id1: theme.id, order1: theme.sort_order,
+      id2: sorted[target].id, order2: sorted[target].sort_order,
+    });
+  };
+
+  const swapVideoWithNeighbor = (video: any, direction: -1 | 1) => {
+    const sorted = themeVideos.sort((a: any, b: any) => a.sort_order - b.sort_order);
+    const idx = sorted.findIndex((v: any) => v.id === video.id);
+    const target = idx + direction;
+    if (target < 0 || target >= sorted.length) return;
+    onSwapVideoOrder.mutate({
+      id1: video.id, order1: video.sort_order,
+      id2: sorted[target].id, order2: sorted[target].sort_order,
+    });
+  };
+
+  const swapResourceWithNeighbor = (resource: any, direction: -1 | 1) => {
+    const sorted = themeResources.sort((a: any, b: any) => a.sort_order - b.sort_order);
+    const idx = sorted.findIndex((r: any) => r.id === resource.id);
+    const target = idx + direction;
+    if (target < 0 || target >= sorted.length) return;
+    onSwapResourceOrder.mutate({
+      id1: resource.id, order1: resource.sort_order,
+      id2: sorted[target].id, order2: sorted[target].sort_order,
+    });
+  };
+
   return (
     <div className="bg-card rounded-2xl card-shadow border border-border/50 overflow-hidden">
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-6 flex items-center justify-between hover:bg-muted/30 transition-colors"
-      >
-        <div className="flex items-center gap-4">
-          <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-            <Icon className="text-primary w-5 h-5" />
-          </div>
-          <div className="text-left">
-            <p className="font-semibold text-foreground text-base">{theme.title}</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              {theme.description.slice(0, 80)}{theme.description.length > 80 ? '…' : ''}
-            </p>
-          </div>
+      <div className="w-full p-6 flex items-center justify-between hover:bg-muted/30 transition-colors">
+        <div className="flex items-center gap-3">
+          <SortButtons
+            onMoveUp={() => swapThemeWithNeighbor(-1)}
+            onMoveDown={() => swapThemeWithNeighbor(1)}
+            isFirst={themeIndex === 0}
+            isLast={themeIndex === totalThemes - 1}
+          />
+          <button onClick={() => setIsExpanded(!isExpanded)} className="flex items-center gap-4 text-left">
+            <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <Icon className="text-primary w-5 h-5" />
+            </div>
+            <div>
+              <p className="font-semibold text-foreground text-base">{theme.title}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {theme.description.slice(0, 80)}{theme.description.length > 80 ? '…' : ''}
+              </p>
+            </div>
+          </button>
         </div>
         <div className="flex items-center gap-3 shrink-0">
+          <Link
+            to={`/tema/${theme.id}`}
+            className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+            title="Se temaside"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Eye className="w-4 h-4" />
+          </Link>
           <span className="text-xs font-medium text-muted-foreground bg-muted rounded-full px-3 py-1">
             {themeVideos.length} videoer · {themeResources.length} ressurser
           </span>
-          {isExpanded ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
+          <button onClick={() => setIsExpanded(!isExpanded)}>
+            {isExpanded ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
+          </button>
         </div>
-      </button>
+      </div>
 
       <AnimatePresence>
         {isExpanded && (
@@ -474,6 +536,12 @@ function ThemeDetail({
                           ) : (
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
+                                <SortButtons
+                                  onMoveUp={() => swapVideoWithNeighbor(video, -1)}
+                                  onMoveDown={() => swapVideoWithNeighbor(video, 1)}
+                                  isFirst={themeVideos.indexOf(video) === 0}
+                                  isLast={themeVideos.indexOf(video) === themeVideos.length - 1}
+                                />
                                 <VideoIcon className="w-4 h-4 text-muted-foreground shrink-0" />
                                 <div>
                                   <p className="font-medium text-foreground text-sm">{video.title}</p>
@@ -481,6 +549,9 @@ function ThemeDetail({
                                 </div>
                               </div>
                               <div className="flex gap-1">
+                                <Link to={`/tema/${theme.id}/video/${video.id}`} className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground" title="Se video">
+                                  <Eye className="w-3.5 h-3.5" />
+                                </Link>
                                 <button onClick={() => startEditVideo(video)} className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground" title="Rediger">
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
@@ -628,6 +699,12 @@ function ThemeDetail({
                                   <Image className="w-5 h-5 text-muted-foreground" />
                                 </div>
                               )}
+                              <SortButtons
+                                onMoveUp={() => swapResourceWithNeighbor(resource, -1)}
+                                onMoveDown={() => swapResourceWithNeighbor(resource, 1)}
+                                isFirst={themeResources.indexOf(resource) === 0}
+                                isLast={themeResources.indexOf(resource) === themeResources.length - 1}
+                              />
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                   <p className="font-medium text-foreground text-sm truncate">{resource.title}</p>
@@ -693,6 +770,9 @@ const AdminPage = () => {
   const updateResource = useUpdateThemeResource();
   const deleteResource = useDeleteThemeResource();
   const uploadImage = useUploadResourceImage();
+  const swapThemeOrder = useSwapThemeOrder();
+  const swapVideoOrder = useSwapVideoOrder();
+  const swapResourceOrder = useSwapResourceOrder();
   const { data: siteSettings } = useSiteSettings();
   const updateSetting = useUpdateSiteSetting();
   const { data: feedback } = useFeedback();
@@ -731,6 +811,8 @@ const AdminPage = () => {
   const tabs: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
     { id: "stats", label: "Statistikk", icon: BarChart3 },
     { id: "themes", label: "Temaer & Videoer", icon: LayoutGrid },
+    { id: "navigation", label: "Navigasjon", icon: Navigation },
+    { id: "five_tips", label: "5 Råd", icon: Sparkles },
     { id: "settings", label: "Innstillinger", icon: Settings },
   ];
 
@@ -828,10 +910,12 @@ const AdminPage = () => {
               )}
             </AnimatePresence>
 
-            {themes?.map((theme) => (
+            {themes?.map((theme, i) => (
               <ThemeDetail
                 key={theme.id}
                 theme={theme}
+                themeIndex={i}
+                totalThemes={themes.length}
                 videos={videos ?? []}
                 themes={themes}
                 resources={allResources ?? []}
@@ -844,6 +928,9 @@ const AdminPage = () => {
                 onUpdateResource={updateResource}
                 onDeleteResource={deleteResource}
                 onUploadImage={uploadImage}
+                onSwapThemeOrder={swapThemeOrder}
+                onSwapVideoOrder={swapVideoOrder}
+                onSwapResourceOrder={swapResourceOrder}
               />
             ))}
           </div>
@@ -906,6 +993,12 @@ const AdminPage = () => {
             </div>
           </div>
         )}
+
+        {/* ========== NAVIGATION TAB ========== */}
+        {tab === "navigation" && <NavigationEditor />}
+
+        {/* ========== FIVE TIPS TAB ========== */}
+        {tab === "five_tips" && <FiveTipsEditor />}
       </div>
     </div>
   );
